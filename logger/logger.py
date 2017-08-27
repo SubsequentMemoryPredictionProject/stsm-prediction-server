@@ -1,39 +1,30 @@
 import logging
-from .sumologic_logger import SumoLogicHandler
-from .http_formatter import HttpFormatter
 
 class Singleton(type):
     _instances = {}
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
+    def __call__(self, *args, **kwargs):
+        if self not in self._instances:
+            self._instances[self] = super(Singleton, self).__call__(*args, **kwargs)
+        return self._instances[self]
 
 class Logger(metaclass=Singleton):
     def __init__(self,
-                 name='app-logger',
+                 name='stsm-prediction-server-logger',
                  level=logging.INFO,
                  log_to_console=True,
-                 sumologic_collector_url=None
-                 ):
+                 handler=logging.FileHandler('stsm-prediction-server.log'),
+    ):
+        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         logger = logging.getLogger(name)
         logger.setLevel(level)
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
 
         if log_to_console:
             ch = logging.StreamHandler()
             ch.setLevel(level=level)
-            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             ch.setFormatter(formatter)
             logger.addHandler(ch)
-
-        if sumologic_collector_url:
-            sumoLogicHandler = SumoLogicHandler()
-            sumoLogicHandler.set_collector(collector_url=sumologic_collector_url)
-            sumoLogicHandler.setLevel(level=level)
-            formatter = HttpFormatter()
-            sumoLogicHandler.setFormatter(formatter)
-            logger.addHandler(sumoLogicHandler)
-
         self.logger = logger
 
     def get_logger(self):

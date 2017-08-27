@@ -1,2 +1,5 @@
 setuptools==27.2.0
 Flask==0.12.2
+mysql-connector-python==2.0.4
+scikit-learn==0.18.1
+numpy==1.12.1
