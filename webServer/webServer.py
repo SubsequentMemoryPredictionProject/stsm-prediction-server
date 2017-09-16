@@ -1,7 +1,7 @@
 import os
 from flask import Flask, jsonify, request
 import json
-from logger import Logger
+# from logger import Logger
 
 
 app = Flask(__name__)
