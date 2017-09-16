@@ -6,3 +6,5 @@ newWord = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
 newWordNumpy = np.asarray([newWord])
 prediction = knn.predict(newWordNumpy)
 print(prediction)
+
+
