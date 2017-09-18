@@ -6,6 +6,7 @@ import pymysql.connections
 import sys
 import os
 import json
+import config as cfg
 
 PROJECT_ROOT = os.path.abspath('.')
 print(sys.path)
@@ -15,13 +16,11 @@ print(PROJECT_ROOT)
 from DB.db_access import get_features
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
-CONFIG_FILE_NAME = PROJECT_ROOT+'config.json'
-with open(CONFIG_FILE_NAME)as cfg:
-    config = json.load(cfg)
 
 
-conn = pymysql.connect(host=config.mysql['host'], passwd=config.mysql['password']
-                     , port=config.mysql['port'], user=config.mysql['user'], db=config.mysql['database'])
+
+conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
+                     , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
 mlp_model = MLPClassifier(max_iter=400)
 
