@@ -8,9 +8,7 @@ import os
 import json
 
 PROJECT_ROOT = os.path.abspath('.')
-print(sys.path)
 sys.path.append(PROJECT_ROOT)
-print(PROJECT_ROOT)
 import config as cfg
 
 from DB.db_access import get_features

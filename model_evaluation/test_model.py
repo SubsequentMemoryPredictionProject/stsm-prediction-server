@@ -4,19 +4,27 @@ NUM_RESULTS = 6
 
 def evaluate_model(model, features_test, results_test):
     predictions = model.predict(features_test)
-    precision_score, recall_score, f1_score = [], [], []
+    precision_score =6*[0]
+    recall_score =6*[0]
+    f1_score = 6*[0]
     separate_predictions = separate_results(predictions)
     separate_real_results = separate_results(results_test)
-    for i in range(NUM_RESULTS):
-        precision_score.append(metrics.precision_score(separate_real_results[i],
-                                                       separate_predictions[i],average='micro'))
-        recall_score.append(metrics.recall_score(separate_real_results[i], separate_predictions[i], average='micro'))
-        f1_score.append(metrics.f1_score(separate_real_results[i], separate_predictions[i],average='micro'))
+    for i in [1,2,4,5]:
+        print(i)
+        precision_score[i] = metrics.precision_score(separate_real_results[i], separate_predictions[i], average='weighted')
+        recall_score[i] = metrics.recall_score(separate_real_results[i], separate_predictions[i],average='weighted')
+        f1_score[i] = metrics.f1_score(separate_real_results[i], separate_predictions[i],average='weighted')
+    for i in [0,3]:
+        precision_score[i] = metrics.precision_score(separate_real_results[i],
+                                                     separate_predictions[i])
+        recall_score[i] = metrics.recall_score(separate_real_results[i], separate_predictions[i])
+        f1_score[i] = metrics.f1_score(separate_real_results[i], separate_predictions[i])
     mean_squared_error_score = metrics.mean_squared_error(results_test, predictions)
     print(precision_score)
     print(recall_score)
     print(f1_score)
     print(mean_squared_error_score)
+
     return
 
 
