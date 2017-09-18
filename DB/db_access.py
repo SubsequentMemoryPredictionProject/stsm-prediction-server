@@ -1,6 +1,5 @@
 #import mysql.connector
 import pymysql.connections
-import config as cfg
 import numpy as np
 NUM_FEATURES = 532
 NUM_ELECTRODES = 6
