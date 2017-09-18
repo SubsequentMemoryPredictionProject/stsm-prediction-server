@@ -10,7 +10,7 @@ class Singleton(type):
 class Logger(metaclass=Singleton):
     def __init__(self,
                  name='stsm-prediction-server-logger',
-                 level=logging.INFO,
+                 level=logging.DEBUG,
                  log_to_console=True,
                  handler=logging.FileHandler('stsm-prediction-server.log'),
     ):
