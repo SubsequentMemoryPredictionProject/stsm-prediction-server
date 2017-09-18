@@ -10,6 +10,7 @@ def get_data(db, query):
     cursor = db.cursor()
     cursor.execute(query)
     data = cursor.fetchall()
+    print("in db access")
     cursor.close()
     return data
 
@@ -35,6 +36,7 @@ def get_features(db):
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
              signal_elec4_subelec3 FROM data_set WHERE EEG_data_section=2'
     section_one = get_data(db, query1)
+    print("got section one")
     section_two = get_data(db, query2)
     for i in range(0, len(section_one)):
         for j in range(NUM_ELECTRODES):
