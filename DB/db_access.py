@@ -25,6 +25,7 @@ def insert_data(db, query):
 
 # get features from DB
 def get_features(db):
+    print('in get data')
     features = []
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
@@ -68,6 +69,7 @@ def float_arr(string):
 
 # get results from DB
 def get_results(db):
+    print('in get results')
     results = []
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
              ltm_confidence_level, ltm_remember_know FROM data_set WHERE EEG_data_section=1'

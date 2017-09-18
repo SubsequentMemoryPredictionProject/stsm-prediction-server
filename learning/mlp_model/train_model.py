@@ -24,8 +24,9 @@ mlp_model = MLPClassifier(max_iter=400)
 
 # load data to train & test model
 features = get_features(conn)
+print('finished -  get data')
 results = get_results(conn)
-
+print('finished - get results ')
 conn.close()
 # split data to training and testing set
 features_train, features_test, \
@@ -33,7 +34,7 @@ features_train, features_test, \
 
 multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
 multi_mlp_model.fit(features_train, results_train)
-
+print('finished model fit')
 predictions = multi_mlp_model.predict(features_test)
 
 
