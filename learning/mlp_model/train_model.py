@@ -3,11 +3,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.neural_network import MLPClassifier
 import pymysql.connections
-import config as cfg
+import sys
+import os
 
 from DB.db_access import get_features
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
+sys.path.append(os.path.abspath('C:\\Users\\user\PycharmProjects\stsm-prediction-server'))
+import config as cfg
 
 conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
