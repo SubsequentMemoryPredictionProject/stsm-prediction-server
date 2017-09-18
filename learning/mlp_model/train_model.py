@@ -7,38 +7,39 @@ import sys
 import os
 import json
 
-print(sys.path)
 PROJECT_ROOT = os.path.abspath('.')
+print(sys.path)
+sys.path.append(PROJECT_ROOT)
 print(PROJECT_ROOT)
+
+from DB.db_access import get_features
+from DB.db_access import get_results
+from model_evaluation.test_model import evaluate_model
 CONFIG_FILE_NAME = PROJECT_ROOT+'config.json'
-# with open(CONFIG_FILE_NAME)as cfg:
-#     config = json.load(cfg)
-#
-# from DB.db_access import get_features
-# from DB.db_access import get_results
-# from model_evaluation.test_model import evaluate_model
-#
-#
-# conn = pymysql.connect(host=config.mysql['host'], passwd=config.mysql['password']
-#                      , port=config.mysql['port'], user=config.mysql['user'], db=config.mysql['database'])
-#
-# mlp_model = MLPClassifier(max_iter=400)
-#
-# # load data to train & test model
-# features = get_features(conn)
-# results = get_results(conn)
-#
-# conn.close()
-# # split data to training and testing set
-# features_train, features_test, \
-#     results_train, results_test = train_test_split(features, results, test_size=0.25, random_state=0)
-#
-# multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
-# multi_mlp_model.fit(features_train, results_train)
-#
-# predictions = multi_mlp_model.predict(features_test)
-#
-#
-# evaluate_model(multi_mlp_model,features_test,results_test)
-# # save trained model
-# joblib.dump(multi_mlp_model, 'mlp_model.pkl')
+with open(CONFIG_FILE_NAME)as cfg:
+    config = json.load(cfg)
+
+
+conn = pymysql.connect(host=config.mysql['host'], passwd=config.mysql['password']
+                     , port=config.mysql['port'], user=config.mysql['user'], db=config.mysql['database'])
+
+mlp_model = MLPClassifier(max_iter=400)
+
+# load data to train & test model
+features = get_features(conn)
+results = get_results(conn)
+
+conn.close()
+# split data to training and testing set
+features_train, features_test, \
+    results_train, results_test = train_test_split(features, results, test_size=0.25, random_state=0)
+
+multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
+multi_mlp_model.fit(features_train, results_train)
+
+predictions = multi_mlp_model.predict(features_test)
+
+
+evaluate_model(multi_mlp_model,features_test,results_test)
+# save trained model
+joblib.dump(multi_mlp_model, 'mlp_model.pkl')
