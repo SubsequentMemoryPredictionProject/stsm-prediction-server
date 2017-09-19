@@ -61,7 +61,7 @@ def float_arr(string):
     for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
-            to_array = np.zeros(6384)
+            to_array = 6384*[0]
             return to_array
         # TODO fix missing features
         if (to_array[i] == '') or (to_array[i] == '-') or (to_array[i] == '.'):
