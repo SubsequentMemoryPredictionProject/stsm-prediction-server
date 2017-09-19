@@ -51,7 +51,7 @@ def get_signals(db):
         word = np.array(word, float)
         signals.append(word)
         word = []
-    signals_array = np.asarray(signals,float)
+    signals_array = np.asarray(signals)
     return signals_array
 
 
