@@ -56,7 +56,7 @@ def get_features(db):
 # create float array from str
 def float_arr(string):
     to_array = string.split(',')
-    for i in range(0, len(to_array)):
+    for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
             to_array = []
