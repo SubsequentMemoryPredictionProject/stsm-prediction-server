@@ -27,17 +27,17 @@ def insert_data(db, query):
 # get eeg signals from DB
 def get_signals(db):
     print('in get data')
+    signals = []
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1 LIMIT 0,2000'
+             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1 LIMIT 0,4000'
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
              signal_elec4_subelec3 FROM data_set WHERE EEG_data_section=2 LIMIT 0,2000'
     section_one = get_data(db, query1)
     print("got section one")
     print(len(section_one))
-    signals = np.zeros(len(section_one))
     section_two = get_data(db, query2)
     print("got section 2")
     for i in range(0, len(section_one)):
@@ -46,11 +46,11 @@ def get_signals(db):
             word.extend(float_arr(section_one[i][j]))
         for k in range(NUM_ELECTRODES):
             word.extend(float_arr(section_two[i][k]))
-        word = np.asarray(word, float)
-        np.append(signals,[word],axis=0)
+        word = np.asarray(word, dtype=np.float32)
+        signals.append(word)
         word = []
-    #signals_array = np.asarray(signals,dtype=np.ndarray)
-    return signals
+    signals_array = np.asarray(signals,dtype=np.ndarray)
+    return signals_array
 
 
 # create float array from str
