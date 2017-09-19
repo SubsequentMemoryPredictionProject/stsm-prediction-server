@@ -31,7 +31,7 @@ def get_signals(db):
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1 LIMIT 0,4000'
+             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1 LIMIT 0,2000'
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
              signal_elec4_subelec3 FROM data_set WHERE EEG_data_section=2 LIMIT 0,2000'
@@ -46,7 +46,7 @@ def get_signals(db):
             word.extend(float_arr(section_one[i][j]))
         for k in range(NUM_ELECTRODES):
             word.extend(float_arr(section_two[i][k]))
-        word = np.asarray(word, dtype=np.float32)
+        word = np.asarray(word, float)
         signals.append(word)
         word = []
     signals_array = np.asarray(signals,dtype=np.ndarray)
