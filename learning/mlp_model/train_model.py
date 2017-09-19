@@ -7,6 +7,8 @@ import sys
 import os
 import json
 
+
+
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 import config as cfg
@@ -28,6 +30,7 @@ try:
     Y = get_results(conn)
     print('finished - get results ')
     conn.close()
+
     # split data to training and testing set
     X_train, X_test, \
         Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
