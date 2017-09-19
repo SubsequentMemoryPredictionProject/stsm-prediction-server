@@ -24,10 +24,10 @@ def insert_data(db, query):
     return
 
 
-# get features from DB
-def get_features(db):
+# get eeg signals from DB
+def get_signals(db):
     print('in get data')
-    features = []
+    signals = []
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
@@ -41,15 +41,16 @@ def get_features(db):
     section_two = get_data(db, query2)
     print("got section 2")
     for i in range(0, len(section_one)):
+        print("word %s",i)
         for j in range(NUM_ELECTRODES):
             word = word + float_arr(section_one[i][j])
         for k in range(NUM_ELECTRODES):
             word = word + float_arr(section_two[i][k])
         word = np.array(word, float)
-        features.append(word)
+        signals.append(word)
         word = []
-    features_array = np.asarray(features,float)
-    return features_array
+    signals_array = np.asarray(signals,float)
+    return signals_array
 
 
 # create float array from str

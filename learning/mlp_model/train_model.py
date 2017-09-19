@@ -11,7 +11,7 @@ PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 import config as cfg
 
-from DB.db_access import get_features
+from DB.db_access import get_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
 
@@ -23,22 +23,21 @@ try:
     mlp_model = MLPClassifier(max_iter=400)
 
     # load data to train & test model
-    features = get_features(conn)
+    X = get_signals(conn)
     print('finished -  get data')
-    results = get_results(conn)
+    Y = get_results(conn)
     print('finished - get results ')
     conn.close()
     # split data to training and testing set
-    features_train, features_test, \
-        results_train, results_test = train_test_split(features, results, test_size=0.25, random_state=0)
+    X_train, X_test, \
+        Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
 
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
-    multi_mlp_model.fit(features_train, results_train)
+    multi_mlp_model.fit(X_train, Y_train)
     print('finished model fit')
-    predictions = multi_mlp_model.predict(features_test)
+    predictions = multi_mlp_model.predict(X_test)
 
-
-    evaluate_model(multi_mlp_model,features_test,results_test)
+    evaluate_model(multi_mlp_model,X_test,Y_test)
     # save trained model
     joblib.dump(multi_mlp_model, 'mlp_model.pkl')
 except:
