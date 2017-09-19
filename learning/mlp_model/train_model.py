@@ -6,7 +6,7 @@ import pymysql.connections
 import sys
 import os
 import json
-
+import numpy as np
 
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -30,7 +30,8 @@ try:
     Y = get_results(conn)
     print('finished - get results ')
     conn.close()
-
+    print(np.shape(X))
+    print(np.shape(Y))
     # split data to training and testing set
     X_train, X_test, \
         Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
