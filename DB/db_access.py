@@ -84,7 +84,8 @@ def get_results(db):
     for row in data_set:
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
-            continue
+            results =[]
+            return results
         results.append(np.array(row, int))
     results_array = np.asarray(results,int)
     return results_array
