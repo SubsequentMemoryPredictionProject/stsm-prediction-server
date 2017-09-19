@@ -47,7 +47,7 @@ def get_signals(db):
         for k in range(NUM_ELECTRODES):
             word.extend(float_arr(section_two[i][k]))
         word = np.asarray(word, float)
-        np.append(signals,word)
+        np.append(signals,[word])
         word = []
     #signals_array = np.asarray(signals,dtype=np.ndarray)
     return signals
