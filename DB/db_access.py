@@ -50,7 +50,7 @@ def get_signals(db):
         signals.append(word)
         word = []
     signals_array = np.asarray(signals,dtype=np.ndarray)
-    return signals_array
+    return signals
 
 
 # create float array from str
