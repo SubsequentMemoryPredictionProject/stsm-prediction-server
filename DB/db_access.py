@@ -41,7 +41,6 @@ def get_features(db):
     section_two = get_data(db, query2)
     print("got section 2")
     for i in range(0, len(section_one)):
-        print(i)
         for j in range(NUM_ELECTRODES):
             word = word + float_arr(section_one[i][j])
         for k in range(NUM_ELECTRODES):
@@ -57,6 +56,7 @@ def get_features(db):
 def float_arr(string):
     to_array = string.split(',')
     for i in range(len(to_array)):
+        print(to_array[i])
         # ignore missing words
         if 'undefined' == to_array[i]:
             to_array = []
