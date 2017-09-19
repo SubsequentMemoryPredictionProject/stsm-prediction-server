@@ -85,5 +85,5 @@ def get_results(db):
            # print("no results")
             #continue
         results.append(np.array(row, int))
-    results_array = np.asarray(results,int)
-    return results_array
+    results = np.asarray(results,int)
+    return results
