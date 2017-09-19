@@ -48,7 +48,6 @@ def get_signals(db):
             word.extend(float_arr(section_two[i][k]))
         word = np.asarray(word, float)
         signals.append(word)
-        print(np.shape(signals))
         word = []
     signals_array = np.asarray(signals,dtype=np.ndarray)
     return signals_array
