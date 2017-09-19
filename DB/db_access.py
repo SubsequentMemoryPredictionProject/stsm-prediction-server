@@ -48,8 +48,8 @@ def get_signals(db):
         for k in range(NUM_ELECTRODES):
             word = word + float_arr(section_two[i][k])
             print("part = ",k+6)
-        word = np.array(word, float)
-        signals.append(word)
+        word = np.asarray(word, float)
+        signals.append([word])
         word = []
     signals_array = np.asarray(signals)
     return signals_array
