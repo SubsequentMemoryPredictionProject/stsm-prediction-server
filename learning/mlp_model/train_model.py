@@ -30,7 +30,7 @@ try:
     Y = get_results(conn)
     print('finished - get results ')
     conn.close()
-    X = np.asarray(X,dtype = np.ndarray)
+    #X = np.asarray(X,dtype = np.ndarray)
     print(np.shape(X))
     print(np.shape(Y))
     # split data to training and testing set
