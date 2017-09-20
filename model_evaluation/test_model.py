@@ -10,7 +10,6 @@ def evaluate_model(model, features_test, results_test):
     separate_predictions = separate_results(predictions)
     separate_real_results = separate_results(results_test)
     for i in [1,2,4,5]:
-        print(i)
         precision_score[i] = metrics.precision_score(separate_real_results[i], separate_predictions[i], average='weighted')
         recall_score[i] = metrics.recall_score(separate_real_results[i], separate_predictions[i],average='weighted')
         f1_score[i] = metrics.f1_score(separate_real_results[i], separate_predictions[i],average='weighted')
