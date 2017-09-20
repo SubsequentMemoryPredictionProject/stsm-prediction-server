@@ -31,6 +31,7 @@ try:
     print('finished - get results ')
     conn.close()
     #X = np.asarray(X,dtype = np.ndarray)
+    print(sys.getsizeof(X))
     print(np.shape(X))
     print(np.shape(Y))
     # split data to training and testing set
