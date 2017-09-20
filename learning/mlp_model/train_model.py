@@ -33,7 +33,7 @@ try:
     print(sys.getsizeof(X))
     print(np.shape(X))
     print(np.shape(Y))
-    X = np.asarray(X,dtype=np.ndarray)
+    #X = np.asarray(X,dtype=np.ndarray)
 
     # split data to training and testing set
     X_train, X_test, \
