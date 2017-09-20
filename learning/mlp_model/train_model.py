@@ -30,7 +30,8 @@ try:
     Y = get_results(conn)
     print('finished - get results ')
     conn.close()
-    X = np.asarray(X,dtype = np.ndarray)
+    for i in X[0]:
+        print(i)
     print(sys.getsizeof(X))
     print(np.shape(X))
     print(np.shape(Y))
