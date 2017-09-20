@@ -31,10 +31,10 @@ def get_signals(db):
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1 LIMIT 0,8000'
+             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1 LIMIT 0,4000'
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
-             signal_elec4_subelec3 FROM data_set WHERE EEG_data_section=2 LIMIT 0,8000'
+             signal_elec4_subelec3 FROM data_set WHERE EEG_data_section=2 LIMIT 0,4000'
     section_one = get_data(db, query1)
     print("got section one")
     print(len(section_one))
@@ -46,10 +46,10 @@ def get_signals(db):
             word.extend(float_arr(section_one[i][j]))
         for k in range(NUM_ELECTRODES):
             word.extend(float_arr(section_two[i][k]))
-        word = np.asarray(word, float)
+        word = np.asarray(word, dtype=np.float32)
         signals.append(word)
         word = []
-    #signals = np.asarray(signals,dtype=np.ndarray)
+    signals = np.asarray(signals,dtype=np.ndarray)
     return signals
 
 
@@ -77,7 +77,7 @@ def get_results(db):
     print('in get results')
     results = []
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM data_set WHERE EEG_data_section=1 LIMIT 0,8000'
+             ltm_confidence_level, ltm_remember_know FROM data_set WHERE EEG_data_section=1 LIMIT 0,4000'
     data_set = get_data(db, query)
     for row in data_set:
         # ignore missing words
