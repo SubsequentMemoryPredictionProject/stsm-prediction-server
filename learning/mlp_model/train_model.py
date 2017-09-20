@@ -30,11 +30,11 @@ try:
     Y = get_results(conn)
     print('finished - get results ')
     conn.close()
-    for i in X[0]:
-        print(i)
     print(sys.getsizeof(X))
     print(np.shape(X))
     print(np.shape(Y))
+    X = np.asarray(X,dtype=np.ndarray)
+
     # split data to training and testing set
     X_train, X_test, \
         Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
