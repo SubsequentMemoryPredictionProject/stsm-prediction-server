@@ -49,7 +49,7 @@ def get_signals(db):
         word = np.asarray(word, dtype=np.float16)
         signals.append(word)
         word = []
-    signals = np.asarray(signals,dtype=np.ndarray)
+    #signals = np.asarray(signals,dtype=np.ndarray)
     return signals
 
 
