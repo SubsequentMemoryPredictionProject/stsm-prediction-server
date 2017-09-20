@@ -65,7 +65,7 @@ def float_arr(string):
         if (to_array[i] == '') or (to_array[i] == '-') or (to_array[i] == '.'):
             to_array[i]=0.0
             continue
-        to_array[i] = float(to_array[i])
+        to_array[i] = np.float32(to_array[i])
     # add missing feature
     while len(to_array) < NUM_FEATURES:
         to_array.append(0.0)
