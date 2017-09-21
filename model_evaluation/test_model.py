@@ -4,16 +4,16 @@ NUM_RESULTS = 6
 
 def evaluate_model(model, features_test, results_test):
     predictions = model.predict(features_test)
-    precision_score =6*[0]
-    recall_score =6*[0]
-    f1_score = 6*[0]
+    precision_score = NUM_RESULTS*[0]
+    recall_score = NUM_RESULTS*[0]
+    f1_score = NUM_RESULTS*[0]
     separate_predictions = separate_results(predictions)
     separate_real_results = separate_results(results_test)
-    for i in [1,2,4,5]:
+    for i in [1, 2, 4, 5]:
         precision_score[i] = metrics.precision_score(separate_real_results[i], separate_predictions[i], average='weighted')
         recall_score[i] = metrics.recall_score(separate_real_results[i], separate_predictions[i],average='weighted')
         f1_score[i] = metrics.f1_score(separate_real_results[i], separate_predictions[i],average='weighted')
-    for i in [0,3]:
+    for i in [0, 3]:
         precision_score[i] = metrics.precision_score(separate_real_results[i],
                                                      separate_predictions[i])
         recall_score[i] = metrics.recall_score(separate_real_results[i], separate_predictions[i])

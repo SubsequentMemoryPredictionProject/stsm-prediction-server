@@ -1,5 +1,6 @@
 #import mysql.connector
 import pymysql.connections
+from sklearn.preprocessing import Imputer
 import numpy as np
 NUM_FEATURES = 532
 NUM_ELECTRODES = 6
@@ -26,21 +27,21 @@ def insert_data(db, query):
 
 # get eeg signals from DB
 def get_signals(db):
-    print('in get data')
+    print('in get signals')
     signals = []
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1 '
+             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1 LIMIT 0,2000'
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
-             signal_elec4_subelec3 FROM data_set WHERE EEG_data_section=2'
+             signal_elec4_subelec3 FROM data_set WHERE EEG_data_section=2 LIMIT 0,2000'
     section_one = get_data(db, query1)
     print("got section one")
     print(len(section_one))
     section_two = get_data(db, query2)
     print("got section 2")
-    for i in range(0, len(section_one)):
+    for i in range(len(section_one)):
         print("word  = ",i)
         for j in range(NUM_ELECTRODES):
             word.extend(float_arr(section_one[i][j]))
@@ -49,26 +50,26 @@ def get_signals(db):
         word = np.asarray(word, dtype=np.float16)
         signals.append(word)
         word = []
-    #signals = np.asarray(signals,dtype=np.ndarray)
     return signals
 
 
-# create float array from str
+# create float array from data str input + fix missing signals
 def float_arr(string):
     to_array = string.split(',')
     for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
-            to_array = np.zeros(532,np.float16)
+            to_array = np.zeros(NUM_FEATURES,np.float16)
             return to_array
-        # TODO fix missing features
-        if (to_array[i] == '') or (to_array[i] == '-') or (to_array[i] == '.'):
-            to_array[i]= np.float16(0.0)
+        # mark the places with missing signals
+        if to_array[i] in ['', '.', '-', ' ']:
+            to_array[i] = np.nan
             continue
         to_array[i] = np.float16(to_array[i])
-    # add missing feature
+    # add place holders for missing signals if array contains < 532
     while len(to_array) < NUM_FEATURES:
-        to_array.append(np.float16(0.0))
+        to_array.append(np.nan)
+    to_array = fix_missing_signals(to_array)
     return to_array
 
 
@@ -77,7 +78,7 @@ def get_results(db):
     print('in get results')
     results = []
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM data_set WHERE EEG_data_section=1 '
+             ltm_confidence_level, ltm_remember_know FROM data_set WHERE EEG_data_section=1 LIMIT 0,2000'
     data_set = get_data(db, query)
     for row in data_set:
         # ignore missing words
@@ -87,3 +88,10 @@ def get_results(db):
         results.append(np.array(row, int))
     #results = np.asarray(results,int)
     return results
+
+
+# fix missing signals from one electrode
+def fix_missing_signals(electrode):
+    imp = Imputer(axis=1, copy=False, missing_values='NaN', strategy='mean', verbose=0)
+    imp.fit([electrode])
+    return np.reshape(imp.transform([electrode]), NUM_FEATURES)
