@@ -55,6 +55,7 @@ def get_signals(db):
 
 # create float array from data str input + fix missing signals
 def float_arr(string):
+    fix = False
     to_array = string.split(',')
     for i in range(len(to_array)):
         # ignore missing words
@@ -64,12 +65,15 @@ def float_arr(string):
         # mark the places with missing signals
         if to_array[i] in ['', '.', '-', ' ']:
             to_array[i] = np.nan
+            fix = True
             continue
         to_array[i] = np.float16(to_array[i])
     # add place holders for missing signals if array contains < 532
     while len(to_array) < NUM_FEATURES:
         to_array.append(np.nan)
-    to_array = fix_missing_signals(to_array)
+        fix = True
+    if fix:
+        to_array = fix_missing_signals(to_array)
     return to_array
 
 
