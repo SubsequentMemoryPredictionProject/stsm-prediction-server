@@ -3,12 +3,17 @@ from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn import svm
 import pymysql.connections
-import config as cfg
 import numpy as np
 from sklearn.multiclass import OneVsRestClassifier
 from DB.db_access import get_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
+import sys
+import os
+
+PROJECT_ROOT = os.path.abspath('.')
+sys.path.append(PROJECT_ROOT)
+import config as cfg
 
 
 conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
@@ -17,7 +22,9 @@ conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
 svm_model = svm.LinearSVC()
 # load data to train & test model
 X = get_signals(conn)
+print('finished -  get data')
 Y = get_results(conn)
+print('finished - get results ')
 conn.close()
 
 print(np.shape(X))
@@ -28,6 +35,7 @@ X_train, X_test, \
 
 multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
 multi_svm_model.fit(X_train, Y_train)
+print('finished model fit')
 
 evaluate_model(multi_svm_model, X_test, Y_test)
 

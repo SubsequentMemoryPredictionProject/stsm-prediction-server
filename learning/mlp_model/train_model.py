@@ -7,6 +7,7 @@ import sys
 import os
 import json
 import numpy as np
+from sklearn import cross_validation
 
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -39,9 +40,6 @@ try:
     X_train, X_test, \
         Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
 
-    for res in Y_train:
-        if res[0] == 0:
-            print(res)
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     multi_mlp_model.fit(X_train, Y_train)
     print('finished model fit')
