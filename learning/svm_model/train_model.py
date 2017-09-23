@@ -6,7 +6,7 @@ import pymysql.connections
 import config as cfg
 import numpy as np
 from sklearn.multiclass import OneVsRestClassifier
-from DB.db_access import get_features
+from DB.db_access import get_signals
 from DB.db_access import get_results
 
 
@@ -15,7 +15,7 @@ conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
 
 svm_model = svm.LinearSVC()
 # load data to train & test model
-features = get_features(conn)
+features = get_signals(conn)
 results = get_results(conn)
 conn.close()
 

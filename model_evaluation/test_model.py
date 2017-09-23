@@ -15,7 +15,7 @@ def evaluate_model(model, features_test, results_test):
         f1_score[i] = metrics.f1_score(separate_real_results[i], separate_predictions[i],average='weighted')
     for i in [0, 3]:
         precision_score[i] = metrics.precision_score(separate_real_results[i],
-                                                     separate_predictions[i])
+                                                     separate_predictions[i],pos_label=0)
         recall_score[i] = metrics.recall_score(separate_real_results[i], separate_predictions[i],pos_label=0)
         f1_score[i] = metrics.f1_score(separate_real_results[i], separate_predictions[i],pos_label=0)
     mean_squared_error_score = metrics.mean_squared_error(results_test, predictions)

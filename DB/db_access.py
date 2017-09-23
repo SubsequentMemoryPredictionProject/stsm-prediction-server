@@ -96,7 +96,6 @@ def get_results(db):
 
 # fix missing signals from one electrode
 def fix_missing_signals(electrode):
-    print("in fix missing signals")
     imp = Imputer(axis=1, copy=False, missing_values='NaN', strategy='mean', verbose=0)
     imp.fit([electrode])
     return np.reshape(imp.transform([electrode]), NUM_FEATURES)
