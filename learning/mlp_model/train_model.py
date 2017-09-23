@@ -7,6 +7,7 @@ import sys
 import os
 import json
 import numpy as np
+import gc
 
 
 
@@ -45,6 +46,7 @@ try:
         Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
     del X
     del Y
+    gc.collect()
     multi_mlp_model = MultiOutputClassifier(mlp_changed_layer, n_jobs=1)
     multi_mlp_model.fit(X_train, Y_train)
     print('finished model fit')
