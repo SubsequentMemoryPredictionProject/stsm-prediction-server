@@ -28,13 +28,12 @@ try:
                            ['identity', 'logistic', 'tanh', 'relu'],'estimator__solver':['sgd','adam'],'estimator__alpha':
                            [0.0001,0.00001,0.001],'estimator__batch_size':['auto',100,50],'estimator__learning_rate':['constant',
                            'invscaling', 'adaptive'] ,'estimator__max_iter':[200,100],'estimator__shuffle':[True,False],'estimator__tol':[1e-4,1e-5],
-                           'estimator__verbose':[False],'estimator__early_stopping':[True,False],
+                           'estimator__verbose':[False],'estimator__verbose':[True],'estimator__early_stopping':[True,False],
                            'estimator__beta_1':[0.9,0.7,0.5],'estimator__beta_2':[0.999,0.799,0.599],
                            'estimator__epsilon':[1e-8,1e-7]}
     mlp_model = MLPClassifier()
     mlp_multi_model = MultiOutputClassifier(mlp_model)
-    print(mlp_multi_model.get_params().keys())
-    clf = RandomizedSearchCV(estimator=mlp_multi_model,param_distributions=param_distributions,verbose=5,
+    clf = RandomizedSearchCV(estimator=mlp_multi_model,param_distributions=param_distributions,verbose=5,cv=2,
                              scoring=prescision_score,n_iter=5)
     # load data to train & test model
     X = get_signals(conn)
