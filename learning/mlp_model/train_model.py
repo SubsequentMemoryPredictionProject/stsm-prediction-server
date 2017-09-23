@@ -24,7 +24,7 @@ try:
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
     mlp_default = MLPClassifier(max_iter=400)
-    mlp_2_layers = MLPClassifier(max_iter=400,hidden_layer_sizes=(120,120))
+    mlp_changed_layer = MLPClassifier(max_iter=400,hidden_layer_sizes=(120))
     mlp_1_layers = MLPClassifier(max_iter=400,hidden_layer_sizes=(269))
     mlp_solver_lbfgs  = MLPClassifier(max_iter=400,solver='lbfgs')
 
@@ -43,7 +43,7 @@ try:
     # split data to training and testing set
     X_train, X_test, \
         Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
-    multi_mlp_model = MultiOutputClassifier(mlp_2_layers, n_jobs=1)
+    multi_mlp_model = MultiOutputClassifier(mlp_changed_layer, n_jobs=1)
     multi_mlp_model.fit(X_train, Y_train)
     print('finished model fit')
     evaluate_model(multi_mlp_model,X_test,Y_test)
