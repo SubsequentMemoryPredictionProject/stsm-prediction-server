@@ -1,4 +1,3 @@
-from sklearn.externals import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.neural_network import MLPClassifier
@@ -7,15 +6,12 @@ import sys
 import os
 import numpy as np
 import gc
-from sklearn.preprocessing import StandardScaler
-
-
+from sklearn import svm
 
 
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 import config as cfg
-
 from DB.db_access import get_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
@@ -25,13 +21,11 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    classifiers =[MLPClassifier(max_iter=200,verbose=True,activation='relu'),
+    classifiers =[MLPClassifier(max_iter=200,verbose=True,activation='identity'),
                   MLPClassifier(max_iter=200,hidden_layer_sizes=(120,120,120),batch_size=100,verbose=True),
                   MLPClassifier(max_iter=200,hidden_layer_sizes=(269),verbose=True)]
 
     names = ['mlp_default','mlp_3_layer','mlp_changed_layers','mlp_solver_lbfgs']
-    scaler = StandardScaler(copy=False)
-
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')
@@ -49,9 +43,6 @@ try:
     del X
     del Y
     gc.collect()
-    scaler.fit(X_train)
-    scaler.transform(X_train)
-    scaler.transform(X_test)
     for name,clf in zip(names,classifiers):
         multi_mlp_model = MultiOutputClassifier(clf, n_jobs=1)
         multi_mlp_model.fit(X_train, Y_train)
