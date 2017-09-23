@@ -24,9 +24,10 @@ try:
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
     classifiers = [MLPClassifier(max_iter=400), MLPClassifier(max_iter=400,hidden_layer_sizes=(120,120,120,120))
-                   ,MLPClassifier(max_iter=400,solver='lbfg')]
+                   ,MLPClassifier(max_iter=400,solver='lbfgs'),MLPClassifier(max_iter=400,hidden_layer_sizes=(512,512,
+                    512,512,512))]
 
-    names = ['mlp_default','mlp_4_layers','mlp_solver_lbfg']
+    names = ['mlp_default','mlp_4_layers','mlp_5_layers_512''mlp_solver_lbfgs']
 
     # load data to train & test model
     X = get_signals(conn)
