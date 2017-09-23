@@ -24,10 +24,10 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    classifiers =[MLPClassifier(max_iter=200,verbose=True,activation='logistic'),
+    classifiers =[MLPClassifier(max_iter=200,verbose=True,activation='identity'),
                   MLPClassifier(max_iter=200,hidden_layer_sizes=(120,120,120),batch_size=100,verbose=True),
                   MLPClassifier(max_iter=200,hidden_layer_sizes=(269),verbose=True),
-                  MLPClassifier(max_iter=200,solver='lbfgs')]
+                  MLPClassifier(max_iter=200,solver='lbfgs',verbose=True)]
 
     names = ['mlp_default','mlp_3_layer','mlp_changed_layers','mlp_solver_lbfgs']
     # load data to train & test model
@@ -51,8 +51,6 @@ try:
         multi_mlp_model = MultiOutputClassifier(clf, n_jobs=1)
         multi_mlp_model.fit(X_train, Y_train)
         print('finished model fit')
-        del X_train
-        del Y_train
         print("evaluate",name)
         evaluate_model(multi_mlp_model,X_test,Y_test)
     # save trained model
