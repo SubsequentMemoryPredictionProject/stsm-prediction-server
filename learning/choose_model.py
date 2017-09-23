@@ -7,6 +7,10 @@ import os
 import numpy as np
 import gc
 from sklearn import svm
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import RandomizedSearchCV
+
+
 
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -25,7 +29,7 @@ try:
                   MLPClassifier(max_iter=200,hidden_layer_sizes=(120,120,120),batch_size=100,verbose=True),
                   MLPClassifier(max_iter=200,hidden_layer_sizes=(269),verbose=True)]
 
-    names = ['mlp_default','mlp_3_layer','mlp_changed_layers','mlp_solver_lbfgs']
+    names = ['mlp_default','mlp_3_layer','mlp_changed_layers']
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')
