@@ -24,8 +24,8 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    mlp_default = MLPClassifier(max_iter=200,verbose=True,activation='logistic')
-    mlp_changed_layer = MLPClassifier(max_iter=200,hidden_layer_sizes=(120,),batch_size=50,verbose=True)
+    mlp_default = MLPClassifier(max_iter=200,verbose=True,activation='tanh')
+    mlp_changed_layer = MLPClassifier(max_iter=200,hidden_layer_sizes=(120,),batch_size=100,verbose=True)
     mlp_1_layers = MLPClassifier(max_iter=200,hidden_layer_sizes=(269),verbose=True)
     mlp_solver_lbfgs  = MLPClassifier(max_iter=200,solver='lbfgs')
 
@@ -47,7 +47,7 @@ try:
     del X
     del Y
     gc.collect()
-    multi_mlp_model = MultiOutputClassifier(mlp_default, n_jobs=1)
+    multi_mlp_model = MultiOutputClassifier(mlp_changed_layer, n_jobs=1)
     multi_mlp_model.fit(X_train, Y_train)
     print('finished model fit')
     del X_train
