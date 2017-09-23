@@ -6,8 +6,6 @@ import sys
 import os
 import numpy as np
 import gc
-from sklearn import svm
-from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import RandomizedSearchCV
 
 
@@ -19,17 +17,25 @@ import config as cfg
 from DB.db_access import get_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
+from model_evaluation.test_model import prescision_score
 
 
 try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    classifiers =[MLPClassifier(max_iter=200,verbose=True,activation='identity'),
-                  MLPClassifier(max_iter=200,hidden_layer_sizes=(120,120,120),batch_size=100,verbose=True),
-                  MLPClassifier(max_iter=200,hidden_layer_sizes=(269),verbose=True)]
-
-    names = ['mlp_default','mlp_3_layer','mlp_changed_layers']
+    param_distributions = {'estimator__hidden_layer_sizes': [(100,),(100,100),(120,120,120,120),(269,269)],'estimator__activation':
+                           ['identity', 'logistic', 'tanh', 'relu'],'estimator__solver':['sgd','adam'],'estimator__alpha':
+                           [0.0001,0.00001,0.001],'estimator__batch_size':['auto',100,50],'estimator__learning_rate':['constant',
+                           'invscaling', 'adaptive'] ,'estimator__max_iter':[200,100],'estimator__shuffle':[True,False],'estimator__tol':[1e-4,1e-5],
+                           'estimator__verbose':[False],'estimator__early_stopping':[True,False],
+                           'estimator__beta_1':[0.9,0.7,0.5],'estimator__beta_2':[0.999,0.799,0.599],
+                           'estimator__epsilon':[1e-8,1e-7]}
+    mlp_model = MLPClassifier()
+    mlp_multi_model = MultiOutputClassifier(mlp_model)
+    print(mlp_multi_model.get_params().keys())
+    clf = RandomizedSearchCV(estimator=mlp_multi_model,param_distributions=param_distributions,verbose=5,
+                             scoring=prescision_score,n_iter=5)
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')
@@ -47,12 +53,12 @@ try:
     del X
     del Y
     gc.collect()
-    for name,clf in zip(names,classifiers):
-        multi_mlp_model = MultiOutputClassifier(clf, n_jobs=1)
-        multi_mlp_model.fit(X_train, Y_train)
-        print('finished model fit')
-        print("evaluate",name)
-        evaluate_model(multi_mlp_model,X_test,Y_test)
+    clf.fit(X_train, Y_train)
+    print(clf.cv_results_)
+    print(clf.best_score_)
+    print(clf.best_params_)
+    print('finished model fit')
+    #evaluate_model(clf,X_test,Y_test)
     # save trained model
     #joblib.dump(multi_mlp_model, 'mlp_model.pkl')
 except:
