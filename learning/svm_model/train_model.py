@@ -5,16 +5,15 @@ from sklearn import svm
 import pymysql.connections
 import numpy as np
 from sklearn.multiclass import OneVsRestClassifier
-from DB.db_access import get_signals
-from DB.db_access import get_results
-from model_evaluation.test_model import evaluate_model
 import sys
 import os
 
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 import config as cfg
-
+from DB.db_access import get_signals
+from DB.db_access import get_results
+from model_evaluation.test_model import evaluate_model
 
 conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
