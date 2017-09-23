@@ -24,12 +24,12 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    mlp_default = MLPClassifier(max_iter=200,verbose=True,activation='tanh')
-    mlp_changed_layer = MLPClassifier(max_iter=200,hidden_layer_sizes=(120,),batch_size=100,verbose=True)
-    mlp_1_layers = MLPClassifier(max_iter=200,hidden_layer_sizes=(269),verbose=True)
-    mlp_solver_lbfgs  = MLPClassifier(max_iter=200,solver='lbfgs')
+    classifiers =[MLPClassifier(max_iter=200,verbose=True,activation='logistic'),
+                  MLPClassifier(max_iter=200,hidden_layer_sizes=(120,120,120),batch_size=100,verbose=True),
+                  MLPClassifier(max_iter=200,hidden_layer_sizes=(269),verbose=True),
+                  MLPClassifier(max_iter=200,solver='lbfgs')]
 
-
+    names = ['mlp_default','mlp_3_layer','mlp_changed_layers','mlp_solver_lbfgs']
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')
@@ -47,12 +47,14 @@ try:
     del X
     del Y
     gc.collect()
-    multi_mlp_model = MultiOutputClassifier(mlp_changed_layer, n_jobs=1)
-    multi_mlp_model.fit(X_train, Y_train)
-    print('finished model fit')
-    del X_train
-    del Y_train
-    evaluate_model(multi_mlp_model,X_test,Y_test)
+    for name,clf in zip(names,classifiers):
+        multi_mlp_model = MultiOutputClassifier(clf, n_jobs=1)
+        multi_mlp_model.fit(X_train, Y_train)
+        print('finished model fit')
+        del X_train
+        del Y_train
+        print("evaluate",name)
+        evaluate_model(multi_mlp_model,X_test,Y_test)
     # save trained model
     #joblib.dump(multi_mlp_model, 'mlp_model.pkl')
 except:

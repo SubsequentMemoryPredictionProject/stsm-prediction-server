@@ -19,7 +19,7 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    svm_model = svm.LinearSVC()
+    svm_model = svm.LinearSVC(verbose=True)
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')
