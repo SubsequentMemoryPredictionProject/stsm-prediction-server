@@ -25,7 +25,7 @@ try:
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
     mlp_default = MLPClassifier(max_iter=400)
-    mlp_changed_layer = MLPClassifier(max_iter=400,hidden_layer_sizes=(120,),batch_size=100)
+    mlp_changed_layer = MLPClassifier(max_iter=400,hidden_layer_sizes=(120,),batch_size=50)
     mlp_1_layers = MLPClassifier(max_iter=400,hidden_layer_sizes=(269))
     mlp_solver_lbfgs  = MLPClassifier(max_iter=400,solver='lbfgs')
 
