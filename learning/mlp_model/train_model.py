@@ -7,7 +7,8 @@ import sys
 import os
 import json
 import numpy as np
-from sklearn import cross_validation
+from sklearn.preprocessing import StandardScaler
+
 
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -24,6 +25,7 @@ try:
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
     mlp_model = MLPClassifier(max_iter=400)
+    scaler = StandardScaler(copy=False)
 
     # load data to train & test model
     X = get_signals(conn)
@@ -39,7 +41,9 @@ try:
     # split data to training and testing set
     X_train, X_test, \
         Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
-
+    scaler.fit(X_train)
+    X_train = scaler.transform(X_train)
+    X_test = scaler.transform(X_test)
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     multi_mlp_model.fit(X_train, Y_train)
     print('finished model fit')
