@@ -44,10 +44,8 @@ def get_signals(db):
     for i in range(len(section_one)):
         print("word  = ",i)
         for j in range(NUM_ELECTRODES):
-            print("electrode",j)
             word.extend(float_arr(section_one[i][j]))
         for k in range(NUM_ELECTRODES):
-            print("electrode",k+6)
             word.extend(float_arr(section_two[i][k]))
         signals.append(np.asarray(word, dtype=np.float16))
         word = []
