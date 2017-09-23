@@ -23,11 +23,11 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    classifiers = [MLPClassifier(max_iter=400), MLPClassifier(max_iter=400,hidden_layer_sizes=(120,120,120,120)),
-                   MLPClassifier(max_iter=400,hidden_layer_sizes=(512,512,
-                    512,512,512))]
+    mlp_default = MLPClassifier(max_iter=400)
+    mlp_4_layers = MLPClassifier(max_iter=400,hidden_layer_sizes=(120,120,120,120))
+    mlp_5_layers_512 = MLPClassifier(max_iter=400,hidden_layer_sizes=(512,512,512,512,512))
+    mlp_solver_lbfgs  = MLPClassifier(max_iter=400,solver='lbfgs')
 
-    names = ['mlp_default','mlp_4_layers','mlp_5_layers_512']
 
     # load data to train & test model
     X = get_signals(conn)
@@ -43,14 +43,12 @@ try:
     # split data to training and testing set
     X_train, X_test, \
         Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
-    for name, clf in zip(names,classifiers):
-        multi_mlp_model = MultiOutputClassifier(clf, n_jobs=1)
-        multi_mlp_model.fit(X_train, Y_train)
-        print('finished model fit')
-        print(name, " scores: ")
-        evaluate_model(multi_mlp_model,X_test,Y_test)
-        # save trained model
-        #joblib.dump(multi_mlp_model, 'mlp_model.pkl')
+    multi_mlp_model = MultiOutputClassifier(mlp_4_layers, n_jobs=1)
+    multi_mlp_model.fit(X_train, Y_train)
+    print('finished model fit')
+    evaluate_model(multi_mlp_model,X_test,Y_test)
+    # save trained model
+    #joblib.dump(multi_mlp_model, 'mlp_model.pkl')
 except:
     print(sys.exc_info()[0])
     raise
