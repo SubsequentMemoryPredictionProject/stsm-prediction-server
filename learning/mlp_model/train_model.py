@@ -23,8 +23,8 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    classifiers = [MLPClassifier(max_iter=400), MLPClassifier(max_iter=400,hidden_layer_sizes=(120,120,120,120))/
-                   MLPClassifier(max_iter=400,solver='lbfg')]
+    classifiers = [MLPClassifier(max_iter=400), MLPClassifier(max_iter=400,hidden_layer_sizes=(120,120,120,120))
+                   ,MLPClassifier(max_iter=400,solver='lbfg')]
 
     names = ['mlp_default','mlp_4_layers','mlp_solver_lbfg']
 
