@@ -1,6 +1,6 @@
 #import mysql.connector
 import pymysql.connections
-from sklearn.preprocessing import Imputer
+from sklearn.preprocessing import Imputer  # for fixing incomplete data
 import numpy as np
 NUM_FEATURES = 532
 NUM_ELECTRODES = 6
@@ -44,16 +44,17 @@ def get_signals(db):
     for i in range(len(section_one)):
         print("word  = ",i)
         for j in range(NUM_ELECTRODES):
+            print("electrode",j)
             word.extend(float_arr(section_one[i][j]))
         for k in range(NUM_ELECTRODES):
+            print("electrode",k+6)
             word.extend(float_arr(section_two[i][k]))
-        word = np.asarray(word, dtype=np.float16)
-        signals.append(word)
+        signals.append(np.asarray(word, dtype=np.float16))
         word = []
     return signals
 
 
-# create float array from data str input + fix missing signals
+# create float array from str data  + fix missing signals
 def float_arr(string):
     fix = False
     to_array = string.split(',')
@@ -68,7 +69,7 @@ def float_arr(string):
             fix = True
             continue
         to_array[i] = np.float16(to_array[i])
-    # add place holders for missing signals if array contains < 532
+    # add place holders for missing signals if array contains < NUM_FEATURES
     while len(to_array) < NUM_FEATURES:
         to_array.append(np.nan)
         fix = True
@@ -90,7 +91,6 @@ def get_results(db):
            # print("no results")
             #continue
         results.append(np.array(row, int))
-    #results = np.asarray(results,int)
     return results
 
 
