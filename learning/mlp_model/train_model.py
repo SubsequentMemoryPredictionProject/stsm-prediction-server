@@ -24,10 +24,10 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    mlp_default = MLPClassifier(max_iter=200,verbose=True,activation='identity')
+    mlp_default = MLPClassifier(max_iter=200,verbose=True,activation='logistic')
     mlp_changed_layer = MLPClassifier(max_iter=200,hidden_layer_sizes=(120,),batch_size=50,verbose=True)
-    mlp_1_layers = MLPClassifier(max_iter=400,hidden_layer_sizes=(269),verbose=True)
-    mlp_solver_lbfgs  = MLPClassifier(max_iter=400,solver='lbfgs')
+    mlp_1_layers = MLPClassifier(max_iter=200,hidden_layer_sizes=(269),verbose=True)
+    mlp_solver_lbfgs  = MLPClassifier(max_iter=200,solver='lbfgs')
 
 
     # load data to train & test model
