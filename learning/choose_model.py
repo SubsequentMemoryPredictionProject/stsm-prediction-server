@@ -17,7 +17,7 @@ import config as cfg
 from DB.db_access import get_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
-from model_evaluation.test_model import precision_score
+from model_evaluation.test_model import prescision_score
 from model_evaluation.test_model import recall_score
 
 
