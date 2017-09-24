@@ -19,6 +19,8 @@ from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
 from model_evaluation.test_model import prescision_score
 from model_evaluation.test_model import recall_score
+from model_evaluation.test_model import f1_score
+
 
 
 
@@ -36,7 +38,7 @@ try:
     mlp_model = MLPClassifier()
     mlp_multi_model = MultiOutputClassifier(mlp_model)
     clf = RandomizedSearchCV(estimator=mlp_multi_model,param_distributions=param_distributions,verbose=5,cv=2,
-                             scoring=recall_score,n_iter=5)
+                             scoring=f1_score,n_iter=5)
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')
@@ -46,7 +48,6 @@ try:
     print(sys.getsizeof(X))
     print(np.shape(X))
     print(np.shape(Y))
-    #X = np.asarray(X,dtype=np.ndarray)
 
     # split data to training and testing set
     X_train, X_test, \
@@ -59,9 +60,7 @@ try:
     print(clf.best_score_)
     print(clf.best_params_)
     print('finished model fit')
-    #evaluate_model(clf,X_test,Y_test)
-    # save trained model
-    #joblib.dump(multi_mlp_model, 'mlp_model.pkl')
+
 except:
     print(sys.exc_info()[0])
     raise
