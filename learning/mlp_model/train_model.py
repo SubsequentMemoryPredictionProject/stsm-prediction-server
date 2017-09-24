@@ -26,11 +26,11 @@ try:
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
     classifiers =[MLPClassifier(max_iter=100,verbose=True,activation='tanh',alpha=1e-5,batch_size=100,epsilon=10e-7,
-                                beta_2=0.599,hidden_layer_sizes=(100,100)),
-                  MLPClassifier(max_iter=100,hidden_layer_sizes=(100,100),verbose=True),
-                  MLPClassifier(max_iter=200,alpha=1e-5,verbose=True)]
+                                beta_2=0.599,hidden_layer_sizes=(100,100,100)),
+                  MLPClassifier(max_iter=100,hidden_layer_sizes=(100,100),alpha=1e-5,verbose=True),
+                  MLPClassifier(max_iter=200,hidden_layer_sizes=(100,100),activation='identity',verbose=True)]
 
-    names = ['best','mlp_2_layer','mlp_changed_layers','mlp_changed_alpha']
+    names = ['3_layers','mlp_2_layer_alpha','mlp_layers_activation']
     scaler = StandardScaler(copy=False)
 
     # load data to train & test model
