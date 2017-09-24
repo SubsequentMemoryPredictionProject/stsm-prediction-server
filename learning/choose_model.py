@@ -17,7 +17,9 @@ import config as cfg
 from DB.db_access import get_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
-from model_evaluation.test_model import prescision_score
+from model_evaluation.test_model import precision_score
+from model_evaluation.test_model import recall_score
+
 
 
 try:
@@ -34,7 +36,7 @@ try:
     mlp_model = MLPClassifier()
     mlp_multi_model = MultiOutputClassifier(mlp_model)
     clf = RandomizedSearchCV(estimator=mlp_multi_model,param_distributions=param_distributions,verbose=5,cv=2,
-                             scoring=prescision_score,n_iter=5)
+                             scoring=recall_score(),n_iter=5)
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')

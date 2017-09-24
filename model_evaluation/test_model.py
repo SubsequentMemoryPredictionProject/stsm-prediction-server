@@ -1,4 +1,6 @@
 from sklearn import metrics
+from sklearn.metrics import make_scorer
+
 NUM_RESULTS = 6
 
 
@@ -26,14 +28,21 @@ def evaluate_model(model, features_test, results_test):
 
     return
 
-def prescision_score(model, features_test, results_test):
-    predictions = model.predict(features_test)
+def precision_score(results_test, predictions):
     separate_predictions = separate_results(predictions)
     separate_real_results = separate_results(results_test)
     precision_score = metrics.precision_score(separate_real_results[0],
-                                                 separate_predictions[0], pos_label=0)
+                                              separate_predictions[0], pos_label=0)
     return precision_score
 
+make_scorer(precision_score)
+
+def recall_score(results_test,predictions):
+    separate_predictions = separate_results(predictions)
+    separate_real_results = separate_results(results_test)
+    recall_score = metrics.recall_score(separate_real_results[0],
+                                        separate_predictions[0], pos_label=0)
+    return recall_score
 
 def separate_results(results):
     results_metrics = [[]*len(results) for i in range(NUM_RESULTS)]
