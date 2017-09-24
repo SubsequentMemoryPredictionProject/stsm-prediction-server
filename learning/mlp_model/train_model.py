@@ -27,7 +27,7 @@ try:
 
     classifiers =[MLPClassifier(max_iter=100,verbose=True,activation='tanh',alpha=1e-3,epsilon=1e-7,
                                 beta_2=0.799,early_stopping=True ,beta_1=0.7),
-                  MLPClassifier(max_iter=100,hidden_layer_sizes=(100,100),alpha=1e-5,verbose=True,beta_2=0.999999,activation='tanh'),
+                  MLPClassifier(max_iter=100,hidden_layer_sizes=(100,100),verbose=True,beta_2=0.999999,activation='tanh'),
                   MLPClassifier(max_iter=100,alpha=1e-5,hidden_layer_sizes=(100,50),activation='tanh',verbose=True)]
 
     names = ['best_','mlp_2_layer_alpha_beta2','mlp_differ_layers_alpah1']

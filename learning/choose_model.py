@@ -28,17 +28,17 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    param_distributions = {'estimator__hidden_layer_sizes': [(100,),(100,100),(120,120,120,120),(269,269)],'estimator__activation':
-                           ['identity', 'logistic', 'tanh', 'relu'],'estimator__solver':['sgd','adam'],'estimator__alpha':
-                           [0.0001,0.00001,0.001],'estimator__batch_size':['auto',100,50],'estimator__learning_rate':['constant',
+    param_distributions = {'estimator__hidden_layer_sizes': [(100,),(100,100),(120,120,120),(100,50)],'estimator__activation':
+                           ['identity', 'logistic', 'tanh', 'relu'],'estimator__solver':['sgd','adam','lbfgs'],'estimator__alpha':
+                           [0.0001,0.00001],'estimator__batch_size':['auto',100,50],'estimator__learning_rate':['constant',
                            'invscaling', 'adaptive'] ,'estimator__max_iter':[200,100],'estimator__shuffle':[True,False],'estimator__tol':[1e-4,1e-5],
-                           'estimator__verbose':[False],'estimator__verbose':[True],'estimator__early_stopping':[True,False],
-                           'estimator__beta_1':[0.9,0.7,0.5],'estimator__beta_2':[0.999,0.799,0.599],
+                            'estimator__verbose':[True],'estimator__early_stopping':[True,False],
+                           'estimator__beta_1':[0.9,0.8,0.95],'estimator__beta_2':[0.999999,0.899,0.999],
                            'estimator__epsilon':[1e-8,1e-7]}
     mlp_model = MLPClassifier()
     mlp_multi_model = MultiOutputClassifier(mlp_model)
     clf = RandomizedSearchCV(estimator=mlp_multi_model,param_distributions=param_distributions,verbose=5,cv=2,
-                             scoring=f1_score,n_iter=5)
+                             scoring=f1_score,n_iter=6)
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')
