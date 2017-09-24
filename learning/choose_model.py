@@ -36,7 +36,7 @@ try:
     mlp_model = MLPClassifier()
     mlp_multi_model = MultiOutputClassifier(mlp_model)
     clf = RandomizedSearchCV(estimator=mlp_multi_model,param_distributions=param_distributions,verbose=5,cv=2,
-                             scoring=recall_score(),n_iter=5)
+                             scoring=recall_score,n_iter=5)
     # load data to train & test model
     X = get_signals(conn)
     print('finished -  get data')
