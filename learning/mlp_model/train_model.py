@@ -25,12 +25,12 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    classifiers =[MLPClassifier(max_iter=100,verbose=True,activation='tanh',alpha=1e-5,batch_size=100,epsilon=10e-7,
-                                beta_2=0.599,hidden_layer_sizes=(100,100,100)),
-                  MLPClassifier(max_iter=100,hidden_layer_sizes=(100,100),alpha=1e-5,verbose=True),
-                  MLPClassifier(max_iter=200,hidden_layer_sizes=(100,100),activation='identity',verbose=True)]
+    classifiers =[MLPClassifier(max_iter=100,verbose=True,activation='tanh',alpha=1e-3,epsilon=1e-7,
+                                beta_2=0.799,early_stopping=True ,beta_1=0.7),
+                  MLPClassifier(max_iter=100,hidden_layer_sizes=(100,100),alpha=1e-5,verbose=True,beta_2=0.799,activation='tanh'),
+                  MLPClassifier(max_iter=100,hidden_layer_sizes=(100,100),activation='logistic',verbose=True,beta_1=0.8)]
 
-    names = ['3_layers','mlp_2_layer_alpha','mlp_layers_activation']
+    names = ['best_','mlp_2_layer_alpha_beta2','mlp_2layers_beta1']
     scaler = StandardScaler(copy=False)
 
     # load data to train & test model
