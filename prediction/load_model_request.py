@@ -19,7 +19,7 @@ def load_model():
 
 
 def prediction_request(request,db):
-    prediction_details = "AND user_id=" + str(request[0]) + " AND subject_id=" + str(request[1])\
+    prediction_details = " AND user_id=" + str(request[0]) + " AND subject_id=" + str(request[1])\
                          + " AND word_id=" + str(request[2])
     user_request = get_signals(db,prediction_details)
     return user_request
