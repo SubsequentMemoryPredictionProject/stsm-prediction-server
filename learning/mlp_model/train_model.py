@@ -25,11 +25,11 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    mlp_model = MLPClassifier(max_iter=100,verbose=True,alpha=1e-5)
+    mlp_model = MLPClassifier(max_iter=100,verbose=True,alpha=1e-5,hidden_layer_sizes=(100,100))
 
     scaler = StandardScaler(copy=False)
     # load data to train & test model
-    X = get_signals(conn)
+    X = get_signals(conn,'')
     print('finished -  get data')
     Y = get_results(conn)
     print('finished - get results ')
