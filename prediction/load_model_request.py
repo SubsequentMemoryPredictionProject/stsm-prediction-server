@@ -18,15 +18,15 @@ def load_model():
     return mlp_model
 
 
-def prediction_request(request):
+def prediction_request(request,db):
     prediction_details = "AND user_id=" + str(request[0]) + " AND subject_id=" + str(request[1])\
                          + " AND word_id=" + str(request[2])
-    user_request = get_signals(prediction_details)
+    user_request = get_signals(db,prediction_details)
     return user_request
 
 req = [1, 2, 50]
 model = load_model()
-features_to_predict = prediction_request(req)
+features_to_predict = prediction_request(conn,req)
 for i in features_to_predict:
     print(i)
 prediction = model.predict(features_to_predict)
