@@ -1,9 +1,13 @@
 from sklearn.externals import joblib
 from learning.data_set import get_features
+import os
+import sys
 
+PROJECT_ROOT = os.path.abspath('.')
+sys.path.append(PROJECT_ROOT)
 
 def load_model():
-    mlp_model = joblib.load('C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\\trainedModel.pkl')
+    mlp_model = joblib.load('mlp_model.pkl')
     return mlp_model
 
 
