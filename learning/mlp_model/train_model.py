@@ -25,7 +25,8 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    mlp_model = MLPClassifier(max_iter=100,verbose=True,activation='tanh',alpha=1e-5,hidden_layer_sizes=(100,100))
+    mlp_model = MLPClassifier(max_iter=100,verbose=True,activation='tanh',alpha=1e-5,hidden_layer_sizes=(100,100),beta_2=0.899
+                              ,epsilon=1e-7)
 
     scaler = StandardScaler(copy=False)
     # load data to train & test model
