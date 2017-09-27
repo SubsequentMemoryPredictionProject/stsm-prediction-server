@@ -9,6 +9,7 @@ NUM_ELECTRODES = 6
 # get data from DB
 def get_data(db, query):
     cursor = db.cursor()
+    print(query)
     cursor.execute(query)
     data = cursor.fetchall()
     print("in db access")
@@ -77,11 +78,11 @@ def float_arr(string):
 
 
 # get results from DB
-def get_results(db):
+def get_results(db ,user_query='',table='data_set'):
     print('in get results')
     results = []
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM data_set WHERE EEG_data_section=1 '
+             ltm_confidence_level, ltm_remember_know FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query
     data_set = get_data(db, query)
     for row in data_set:
         # ignore missing words

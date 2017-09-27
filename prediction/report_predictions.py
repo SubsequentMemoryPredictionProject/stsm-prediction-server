@@ -16,7 +16,7 @@ def results_file(results, request):
 
 
 # insert results to DB
-def results_db(results, request):
+def results_db(results, request,db):
     for i in range(0, len(request)):
         request_details = "user_id=" + str(request[i][0]) + " AND subject_id=" + str(request[i][1]) \
             + " AND word_id=" + str(request[i][2])
@@ -24,7 +24,7 @@ def results_db(results, request):
         result_details = "stm=" + str(results[i][0]) + ",stm_confidence_level=" + str(results[i][1])\
             + ",stm_remember_know=" + str(results[i][2]) + ",ltm=" + str(results[i][3])\
             + ",ltm_confidence_level=" + str(results[i][4]) + ",ltm_remember_know=" + str(results[i][5])
-        query = "UPDATE `predictions_test` SET " + result_details + " WHERE " + request_details
-        insert_data(cfg.mysql, query)
+        query = "UPDATE `untagged_predictions` SET " + result_details + " WHERE " + request_details
+        insert_data(db, query)
     return
 
