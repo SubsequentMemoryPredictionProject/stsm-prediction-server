@@ -22,6 +22,7 @@ def status():
 
 @app.route('/stsm/algorithms/predict/', methods=['GET','POST'])
 def predict():
+    print(request)
     print(request.get_json())
     return json.dumps({'ok': True})
 
