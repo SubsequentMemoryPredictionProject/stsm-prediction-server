@@ -14,7 +14,7 @@ from model_evaluation.validation import validate_user_results
 
 class StsmPredictionModel:
     def __init__(self):
-        self.model = joblib.load('C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\mlp_model.pkl')
+        self.model = joblib.load('mlp_model.pkl')
         self.db_conn = None
 
     def connect(self):
