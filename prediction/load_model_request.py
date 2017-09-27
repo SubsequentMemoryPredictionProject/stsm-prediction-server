@@ -26,7 +26,7 @@ def prediction_request(request,db):
 
 req = [1, 2, 50]
 model = load_model()
-features_to_predict = prediction_request(conn,req)
+features_to_predict = prediction_request(req,conn)
 for i in features_to_predict:
     print(i)
 prediction = model.predict(features_to_predict)
