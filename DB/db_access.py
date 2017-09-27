@@ -26,16 +26,16 @@ def insert_data(db, query):
 
 
 # get eeg signals from DB
-def get_signals(db, user_query):
+def get_signals(db, user_query='',table='data_set'):
     print('in get signals')
     signals = []
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 from data_set WHERE EEG_data_section=1' + user_query
+             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1' + user_query
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
-             signal_elec4_subelec3 FROM data_set WHERE EEG_data_section=2 ' + user_query
+             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query
     section_one = get_data(db, query1)
     print("got section one")
     print(len(section_one))
