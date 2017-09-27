@@ -47,7 +47,7 @@ def get_signals(db):
             word.extend(float_arr(section_one[i][j]))
         for k in range(NUM_ELECTRODES):
             word.extend(float_arr(section_two[i][k]))
-        signals.append(np.asarray(word, dtype=np.float16))
+        signals.append(np.asarray(word, dtype=np.float))
         word = []
     return signals
 
@@ -59,14 +59,14 @@ def float_arr(string):
     for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
-            to_array = np.zeros(NUM_FEATURES,np.float16)
+            to_array = np.zeros(NUM_FEATURES,np.float)
             return to_array
         # mark the places with missing signals
         if to_array[i] in ['', '.', '-', ' ']:
             to_array[i] = np.nan
             fix = True
             continue
-        to_array[i] = np.float16(to_array[i])
+        to_array[i] = np.float(to_array[i])
     # add place holders for missing signals if array contains < NUM_FEATURES
     while len(to_array) < NUM_FEATURES:
         to_array.append(np.nan)
