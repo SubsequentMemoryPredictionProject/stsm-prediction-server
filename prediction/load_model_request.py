@@ -1,10 +1,17 @@
 from sklearn.externals import joblib
 import os
 import sys
+import pymysql.connections
+
 
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 from DB.db_access import get_signals
+import config as cfg
+
+
+conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
+                       , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
 def load_model():
     mlp_model = joblib.load('mlp_model.pkl')
