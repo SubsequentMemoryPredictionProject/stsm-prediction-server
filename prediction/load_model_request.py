@@ -1,10 +1,10 @@
 from sklearn.externals import joblib
-from DB.db_access import get_signals
 import os
 import sys
 
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
+from DB.db_access import get_signals
 
 def load_model():
     mlp_model = joblib.load('mlp_model.pkl')
