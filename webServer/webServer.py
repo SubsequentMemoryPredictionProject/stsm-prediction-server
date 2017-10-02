@@ -17,7 +17,7 @@ stsm_model = None
 
 # TODO comments
 
-@app.route('/stsm/algorithms/predict/', methods=['GET','POST'])
+@app.route('/stsm/algorithms/predict/', methods=['GET'])
 def predict():
     try:
         stsm_model.evaluate(request.get_json())
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         stsm_model = StsmPredictionModel()
         stsm_model.load_model()
         stsm_model.connect()
-        app.run( host='0.0.0.0',port=3100)
+        app.run( host='0.0.0.0',port=80)
 
     except:
         logger.error('ERROR: %s' %(sys.exc_info()[0]))
