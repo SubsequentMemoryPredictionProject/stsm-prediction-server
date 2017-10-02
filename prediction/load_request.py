@@ -16,6 +16,7 @@ def prediction_request(request,conn):
     request_signals =[]
     user_id = request['user_id']
     print(user_id)
+
     subjects_words = ast.literal_eval(request['subjectWords'])
     print(subjects_words)
     for i in subjects_words:

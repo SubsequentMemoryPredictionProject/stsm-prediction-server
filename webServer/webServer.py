@@ -20,7 +20,7 @@ stsm_model = None
 @app.route('/stsm/algorithms/predict/', methods=['GET'])
 def predict():
     try:
-        print(request)
+        print(request.get_json())
         stsm_model.evaluate(request.get_json())
         return json.dumps({'Success': True})
     except:
