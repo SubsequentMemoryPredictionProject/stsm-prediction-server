@@ -21,9 +21,9 @@ stsm_model = None
 def predict():
     try:
         stsm_model.evaluate(request.get_json())
-        return json.dumps({'Success': True,'Msg' : 'Prediction finished successfully'})
+        return json.dumps({'Success': True})
     except:
-        return json.dumps({'Success':False,'Msg': 'Prediction failed'})
+        return json.dumps({'Success':False})
 
 
 @app.route('/stsm/algorithms/validate/')
@@ -36,13 +36,16 @@ if __name__ == '__main__':
     try:
         logger = Logger().get_logger()
         logger.info('Starting web server...')
-        print(cfg.mysql)
 
         stsm_model = StsmPredictionModel()
         stsm_model.load_model()
+        stsm_model.connect()
         app.run( host='0.0.0.0',port=3100)
 
     except:
-        logger.error('ERROR: %s', sys.exc_info()[0])
+        logger.error('ERROR: %s' %(sys.exc_info()[0]))
+        stsm_model.disconnect()
         logger.info('disconnected from db')
         raise
+    finally:
+        stsm_model.disconnect()

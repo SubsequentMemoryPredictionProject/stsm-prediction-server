@@ -33,3 +33,4 @@ def separate_results(results):
         for res in range(NUM_RESULTS):
             results_metrics[res].append(row[res])
     return results_metrics
+

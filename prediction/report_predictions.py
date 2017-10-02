@@ -19,17 +19,19 @@ def predictions_file(results, request):
 # insert results to DB
 def results_db(results, request,db):
     user_id = request['user_id']
-    insert_result=0
+    insert_result = 0
     subjects_words = ast.literal_eval(request['subjectWords'])
+    query = 'INSERT INTO `untagged_predictions` (user_id,subject_id,word_id,stm,stm_confidence_level,stm_remember_know' \
+            ',ltm,ltm_confidence_level,ltm_remember_know) VALUES'
     for i in subjects_words:
         for j in range(len(subjects_words[i])):
-            request_details = str(user_id) + ",subject_id=" + str(i) \
-                                 + ",word_id=" + str(subjects_words[i][j])
-            result_details = ",stm=" + str(results[insert_result][0]) + ",stm_confidence_level=" + str(results[insert_result][1])\
-            + ",stm_remember_know=" + str(results[insert_result][2]) + ",ltm=" + str(results[insert_result][3])\
-            + ",ltm_confidence_level=" + str(results[insert_result][4]) + ",ltm_remember_know=" + str(results[insert_result][5]) + ");"
-            query = "INSERT INTO `untagged_predictions` VALUES( " + request_details + result_details
-            print(query)
-            insert_data(db, query)
-            insert_result+=1
-        return
+            request_details = '(' + str(user_id) + ','+ str(i)+','+ str(subjects_words[i][j])
+            result_details = ',' + str(results[insert_result][0]) + ',' + str(results[insert_result][1])\
+            + ',' + str(results[insert_result][2]) + ',' + str(results[insert_result][3])\
+            + ',' + str(results[insert_result][4]) + ',' + str(results[insert_result][5]) +'),'
+            query = query + request_details + result_details
+            insert_result += 1
+    query = query[:-1] + ';'
+    print(query)
+    insert_data(db, query)
+    return

@@ -33,14 +33,12 @@ def get_signals(db, user_query='',table='data_set'):
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1 LIMIT 0,20' + user_query +';'
+             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query +';'
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
-             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 LIMIT 0,20' + user_query +';'
+             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query +';'
     section_one = get_data(db, query1)
     print("got section one")
-    print(len(section_one))
-    print(section_one)
     section_two = get_data(db, query2)
     print("got section 2")
     for i in range(len(section_one)):
@@ -51,7 +49,6 @@ def get_signals(db, user_query='',table='data_set'):
             word.extend(float_arr(section_two[i][k]))
         signals.append(np.asarray(word, dtype=np.float))
         word = []
-    print(np.shape(signals))
     return signals
 
 
@@ -84,7 +81,7 @@ def get_results(db ,user_query='',table='data_set'):
     print('in get results')
     results = []
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query
+             ltm_confidence_level, ltm_remember_know FROM ' + table + ' WHERE EEG_data_section=1 LIMIT 0,20 ' + user_query
     data_set = get_data(db, query)
     for row in data_set:
         # ignore missing words
@@ -111,9 +108,9 @@ def choose_signals(db, elec, duration):
         section = 1
     else:
         section = 2
-    part_1 = 'SELECT signal_elec%s_subelec1 FROM data_set WHERE EEG_data_section=%s ;'%(elec,section)
-    part_2 = 'SELECT signal_elec%s_subelec2 FROM data_set WHERE EEG_data_section=%s ;'%(elec,section)
-    part_3 = 'SELECT signal_elec%s_subelec3 FROM data_set WHERE EEG_data_section=%s ;'%(elec,section)
+    part_1 = 'SELECT signal_elec%s_subelec1 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20 ;'%(elec,section)
+    part_2 = 'SELECT signal_elec%s_subelec2 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20 ;'%(elec,section)
+    part_3 = 'SELECT signal_elec%s_subelec3 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20;'%(elec,section)
     subelec_1 = get_data(db, part_1)
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)
@@ -124,7 +121,6 @@ def choose_signals(db, elec, duration):
         average_signal = np.asarray(average_signal)
         word = np.mean(average_signal,axis=0)
         signals.append(np.asarray(word, dtype=np.float))
-        word = []
         average_signal= []
     return signals
 

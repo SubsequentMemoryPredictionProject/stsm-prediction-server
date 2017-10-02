@@ -2,13 +2,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.neural_network import MLPClassifier
 import pymysql.connections
-import sys
-import os
+import sys, os
 import numpy as np
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix
-
-
 
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -36,8 +33,10 @@ try:
     average_matrix =[]
     precision=5*[0]
     recall = 5*[0]
+    f1 = 5*[0]
     not_remember_precision =5*[0]
     not_remember_recall = 5*[0]
+    not_remember_f1 = 5*[0]
 
     for elec in electrode:
         for dur in eeg_duration:
@@ -50,32 +49,33 @@ try:
                     print(np.shape(Y))
                     # cross validation
                     for i in range(5):
-                        X_train, X_test, \
-                        Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
+                        X_train, X_test,Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
                         mlp_multi_model.fit(X_train, Y_train)
                         print('finished model fit')
                         y_pred = separate_results(mlp_multi_model.predict(X_test))[0]
                         y_true = separate_results(Y_test)[0]
-                        precision[i]= metrics.precision_score(y_true,y_pred)
+                        precision[i] = metrics.precision_score(y_true,y_pred)
                         recall[i] = metrics.recall_score(y_true,y_pred)
-                        not_remember_precision[i] = metrics.precision_score(y_true,y_pred,pos_label=0)
-                        not_remember_recall[i] = metrics.recall_score(y_true,y_pred,pos_label=0)
-                        matrix = confusion_matrix(y_true,y_pred)
-                        normelaize_matrix = matrix/matrix.astype(np.float).sum(axis=1)
-                        average_matrix.append(normelaize_matrix)
+                        f1[i] = metrics.f1_score(y_true,y_pred)
+                        not_remember_precision[i] = metrics.precision_score(y_true, y_pred, pos_label=0)
+                        not_remember_recall[i] = metrics.recall_score(y_true, y_pred, pos_label=0)
+                        not_remember_f1[i] = metrics.f1_score(y_true,y_pred,pos_label=0)
+                        matrix = confusion_matrix(y_true, y_pred)
+                        normalize_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
+                        average_matrix.append(normalize_matrix)
                         matrix =[]
-                    print("params: elctrode - %d, duration = %d, layers = %s, activation = %s"%(elec,dur,lyer,func))
-                    #print(confusion_matrix(separate_results(Y_test)[0], separate_results(y_pred)[0]))
+                    print("params: elctrode - %d, duration = %d, layers = %s, activation = %s" % (elec, dur, lyer, func))
                     print("precision = %f"%(np.mean(precision)))
                     print("recll = %f"%(np.mean(recall)))
+                    print("f1 = %f" % (np.mean(f1)))
                     print("negative lable precision = %f" % (np.mean(not_remember_precision)))
                     print("negative lable recll = %f" % (np.mean(not_remember_recall)))
-                    print("normelaized confusion matrix average = %s"%(np.mean(average_matrix,axis=0)))
+                    print("negative lable f1 = %f" % (np.mean(not_remember_f1)))
+                    print("confusion matrix =")
+                    print(np.mean(average_matrix,axis=0))
                     average_matrix =[]
-    conn.close()
-
-
 except:
     print(sys.exc_info()[0])
-    conn.close()
     raise
+finally:
+    conn.close()

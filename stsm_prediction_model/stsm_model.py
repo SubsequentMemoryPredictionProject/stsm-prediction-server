@@ -11,48 +11,53 @@ from prediction.load_request import prediction_request
 from prediction.report_predictions import results_db
 import config as cfg
 from model_evaluation.validation import validate_user_results
+from logger import Logger
 
 
 class StsmPredictionModel:
     def __init__(self):
         self.model = None
         self.db_conn = None
+        self.logger = Logger().get_logger()
 
     def load_model(self):
         try:
             self.model = joblib.load(
-            'C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\mlp_model.pkl')
+                'mlp_model.pkl')
+            self.logger.info('Model loaded successfully')
         except:
-            print(sys.exc_info()[0])
+            self.logger.error('Error loading model - %s' % sys.exc_info()[0])
 
     def connect(self):
-        self.db_conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
+        try:
+            self.db_conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                              , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
+            self.logger.info('Connected to DB')
+        except:
+            self.logger.error('Error connecting to DB - %s' % sys.exc_info()[0])
 
     def disconnect(self):
         self.db_conn.close()
+        self.logger.info('Disconnected from DB')
 
     def evaluate(self, request):
         try:
-            self.connect()
+            self.logger.info("Stsm Model evaluate:")
             request_signals = prediction_request(request, self.db_conn)
-            print('finished request')
-            print(len(request_signals))
-            print(np.shape(request_signals))
+            self.logger.info('Finished loading request eeg signals. size = %s'% str(np.shape(request_signals)))
+            self.logger.info('Starting prediction...')
             prediction = self.model.predict(request_signals)
-            print('got predictions')
-            print(prediction)
+            self.logger.info('Finished prediction')
             results_db(prediction,request,self.db_conn)
-            self.disconnect()
             return prediction
         except:
-            print(sys.exc_info()[0])
             self.disconnect()
+            print(sys.exc_info())
+
+
 
     def validate(self,results):
-        self.connect()
         validate_user_results(results,self.db_conn)
-        self.disconnect()
         return
 
 

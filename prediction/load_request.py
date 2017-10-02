@@ -12,7 +12,6 @@ from DB.db_access import get_signals
 import config as cfg
 
 
-
 def prediction_request(request,conn):
     request_signals =[]
     user_id = request['user_id']
@@ -26,5 +25,5 @@ def prediction_request(request,conn):
                          + " AND word_id=" + str(subjects_words[i][j])
             #TODO change table to user_data
             request_signals.extend(get_signals(conn,prediction_details,'data_set'))
-            print(np.shape(request_signals))
+    print(np.shape(request_signals))
     return request_signals
