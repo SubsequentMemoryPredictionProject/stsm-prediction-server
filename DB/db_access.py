@@ -118,7 +118,6 @@ def choose_signals(db, elec, duration):
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)
     for i in range(len(subelec_1)):
-        print("word  = ",i)
         average_signal.append(float_arr_length(subelec_1[i][0],duration))
         average_signal.append(float_arr_length(subelec_2[i][0],duration))
         average_signal.append(float_arr_length(subelec_3[i][0],duration))
