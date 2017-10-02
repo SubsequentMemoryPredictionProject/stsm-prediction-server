@@ -24,6 +24,6 @@ def prediction_request(request,conn):
             prediction_details = " AND user_id=" + str(user_id) + " AND subject_id=" + str(i)\
                          + " AND word_id=" + str(subjects_words[i][j])
             #TODO change table to user_data
-            request_signals.extend(get_signals(conn,prediction_details,'data_set'))
+            request_signals.extend(get_signals(conn,prediction_details,'user_data'))
     print(np.shape(request_signals))
     return request_signals
