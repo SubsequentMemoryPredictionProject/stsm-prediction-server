@@ -25,7 +25,7 @@ class StsmPredictionModel:
             self.model = joblib.load('mlp_model.pkl')
             self.logger.info('Model loaded successfully')
         except:
-            self.logger.error('Error loading model - %s' % sys.exc_info()[0])
+            self.logger.error('Error loading model - %s' % sys.exc_info())
 
     def connect(self):
         try:
@@ -33,7 +33,7 @@ class StsmPredictionModel:
                              , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
             self.logger.info('Connected to DB')
         except:
-            self.logger.error('Error connecting to DB - %s' % sys.exc_info()[0])
+            self.logger.error('Error connecting to DB - %s' % sys.exc_info())
 
     def disconnect(self):
         self.db_conn.close()
