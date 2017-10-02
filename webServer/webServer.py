@@ -17,7 +17,7 @@ stsm_model = None
 
 # TODO comments
 
-@app.route('/stsm/algorithms/predict/', methods=['GET'])
+@app.route('/stsm/algorithms/predict/', methods=['POST'])
 def predict():
     try:
         print(request.get_json())
