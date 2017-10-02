@@ -2,17 +2,17 @@
 import pymysql.connections
 from sklearn.preprocessing import Imputer  # for fixing incomplete data
 import numpy as np
+import sys
 NUM_FEATURES = 532
 NUM_ELECTRODES = 6
 
 
 # get data from DB
 def get_data(db, query):
+    print("in db access")
     cursor = db.cursor()
-    print(query)
     cursor.execute(query)
     data = cursor.fetchall()
-    print("in db access")
     cursor.close()
     return data
 
@@ -33,13 +33,14 @@ def get_signals(db, user_query='',table='data_set'):
     word = []
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1' + user_query
+             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1 LIMIT 0,20' + user_query +';'
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
-             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query
+             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 LIMIT 0,20' + user_query +';'
     section_one = get_data(db, query1)
     print("got section one")
     print(len(section_one))
+    print(section_one)
     section_two = get_data(db, query2)
     print("got section 2")
     for i in range(len(section_one)):
@@ -50,6 +51,7 @@ def get_signals(db, user_query='',table='data_set'):
             word.extend(float_arr(section_two[i][k]))
         signals.append(np.asarray(word, dtype=np.float))
         word = []
+    print(np.shape(signals))
     return signals
 
 
@@ -98,3 +100,55 @@ def fix_missing_signals(electrode):
     imp = Imputer(axis=1, copy=False, missing_values='NaN', strategy='mean', verbose=0)
     imp.fit([electrode])
     return np.reshape(imp.transform([electrode]), NUM_FEATURES)
+
+
+def choose_signals(db, elec, duration):
+    print('in get signals')
+    signals = []
+    word = []
+    average_signal =[]
+    if elec in [1,2]:
+        section = 1
+    else:
+        section = 2
+    part_1 = 'SELECT signal_elec%s_subelec1 FROM data_set WHERE EEG_data_section=%s ;'%(elec,section)
+    part_2 = 'SELECT signal_elec%s_subelec2 FROM data_set WHERE EEG_data_section=%s ;'%(elec,section)
+    part_3 = 'SELECT signal_elec%s_subelec3 FROM data_set WHERE EEG_data_section=%s ;'%(elec,section)
+    subelec_1 = get_data(db, part_1)
+    subelec_2 = get_data(db, part_2)
+    subelec_3 = get_data(db, part_3)
+    for i in range(len(subelec_1)):
+        print("word  = ",i)
+        average_signal.append(float_arr_length(subelec_1[i][0],duration))
+        average_signal.append(float_arr_length(subelec_2[i][0],duration))
+        average_signal.append(float_arr_length(subelec_3[i][0],duration))
+        average_signal = np.asarray(average_signal)
+        word = np.mean(average_signal,axis=0)
+        signals.append(np.asarray(word, dtype=np.float))
+        word = []
+        average_signal= []
+    return signals
+
+
+def float_arr_length(string, duration):
+    fix = False
+    to_array = string.split(',')
+    for i in range(duration):
+        # ignore missing words
+        if 'undefined' == to_array[i]:
+            to_array = np.zeros(duration,np.float)
+            return to_array
+        # mark the places with missing signals
+        if to_array[i] in ['', '.', '-', ' ']:
+            to_array[i] = np.nan
+            fix = True
+            continue
+        to_array[i] = np.float(to_array[i])
+    # add place holders for missing signals if array contains < NUM_FEATURES
+    while len(to_array) < duration:
+        to_array.append(np.nan)
+        fix = True
+    if fix:
+        to_array = fix_missing_signals(to_array)
+    to_array = np.array(to_array[:duration],dtype=float)
+    return to_array

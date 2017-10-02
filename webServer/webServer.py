@@ -1,5 +1,6 @@
 import os
 import sys
+import ast
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 
@@ -15,17 +16,14 @@ stsm_model = None
 
 
 # TODO comments
-@app.route('/status')
-def status():
-    return json.dumps({'ok': True})
-
 
 @app.route('/stsm/algorithms/predict/', methods=['GET','POST'])
 def predict():
-    print(request)
-    print(request.get_json())
-    return json.dumps({'ok': True})
-
+    try:
+        stsm_model.evaluate(request.get_json())
+        return json.dumps({'Success': True,'Msg' : 'Prediction finished successfully'})
+    except:
+        return json.dumps({'Success':False,'Msg': 'Prediction failed'})
 
 
 @app.route('/stsm/algorithms/validate/')
@@ -41,6 +39,7 @@ if __name__ == '__main__':
         print(cfg.mysql)
 
         stsm_model = StsmPredictionModel()
+        stsm_model.load_model()
         app.run( host='0.0.0.0',port=3100)
 
     except:
