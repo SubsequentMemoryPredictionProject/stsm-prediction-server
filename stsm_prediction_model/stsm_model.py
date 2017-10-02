@@ -50,7 +50,6 @@ class StsmPredictionModel:
             results_db(prediction,request,self.db_conn)
             return prediction
         except:
-            self.disconnect()
             print(sys.exc_info())
 
 
