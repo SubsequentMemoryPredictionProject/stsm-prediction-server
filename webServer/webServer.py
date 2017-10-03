@@ -29,7 +29,7 @@ def predict():
         print('returning Success=True')
         return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
     except:
-        logger.error('ERROR: %s' % (sys.exc_info()[0]))
+        logger.error('ERROR: %s' % (sys.exc_info()))
         return json.dumps({'msg': 'Prediction process failed', 'success': False})
 
 
