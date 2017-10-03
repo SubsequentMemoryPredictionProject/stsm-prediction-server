@@ -26,8 +26,6 @@ def predict():
         print('request.form.get_json()', request.form.get_json())
         print('request.get_json()', request.get_json())
 
-
-
         #stsm_model.evaluate(request.get_json())
         print('returning Success=True')
         return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
