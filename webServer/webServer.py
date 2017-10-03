@@ -22,9 +22,7 @@ stsm_model = None
 @app.route('/stsm/algorithms/predict/', methods=['POST'])
 def predict():
     try:
-        print('request.data', request.data)
-        print('request.args', request.args)
-        print('request.form', request.form)
+        print('request.form', request.form.getlist('subjects_and_word_ids'))
 
         #stsm_model.evaluate(request.get_json())
         print('returning Success=True')
