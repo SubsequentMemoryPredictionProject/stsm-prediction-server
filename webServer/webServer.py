@@ -29,7 +29,7 @@ def predict():
         return json.dumps({'msg': 'Prediction process failed', 'success': False})
 
 
-@app.route('/stsm/algorithms/validate/')
+@app.route('/stsm/algorithms/validate')
 def validate():
     return jsonify(stsm_model.evaluate(request.form.getlist('arr', type=int)))
     return json.dumps({'ok': True})
