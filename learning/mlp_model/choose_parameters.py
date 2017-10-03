@@ -6,7 +6,6 @@ import sys, os
 import numpy as np
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix
-from sklearn.preprocessing import StandardScaler
 
 
 
@@ -31,7 +30,6 @@ try:
     eeg_duration = [240, 256, 260]
 
     Y = get_results(conn)
-    scaler = StandardScaler(copy=False)
     matrix =[]
     average_matrix =[]
     precision=5*[0]
@@ -54,9 +52,6 @@ try:
                     for i in range(5):
                         X_train, X_test,Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
                         mlp_multi_model.fit(X_train, Y_train)
-                        scaler.fit(X_train)
-                        scaler.transform(X_train)
-                        scaler.transform(X_test)
                         print('finished model fit')
                         y_pred = separate_results(mlp_multi_model.predict(X_test))[0]
                         y_true = separate_results(Y_test)[0]
