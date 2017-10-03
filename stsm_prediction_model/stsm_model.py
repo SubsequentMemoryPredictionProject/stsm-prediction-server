@@ -8,21 +8,22 @@ import numpy as np
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 from prediction.load_request import prediction_request
-from prediction.report_predictions import results_db
+from prediction.report_predictions import predictions_db
 import config as cfg
-from model_evaluation.validation import validate_user_results
+from model_evaluation.validation_report import validate_user_results
 from logger import Logger
+#C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\
 
 
 class StsmPredictionModel:
-    def __init__(self):
+    def __init__(self,logger):
         self.model = None
         self.db_conn = None
-        self.logger = Logger().get_logger()
+        self.logger = logger
 
     def load_model(self):
         try:
-            self.model = joblib.load('C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\mlp_model.pkl')
+            self.model = joblib.load('mlp_model.pkl')
             self.logger.info('Model loaded successfully')
         except:
             self.logger.error('Error loading model - %s' % sys.exc_info())
@@ -41,21 +42,21 @@ class StsmPredictionModel:
 
     def evaluate(self, request):
         try:
-            self.logger.info("Stsm Model evaluate:")
+            self.logger.info("in Stsm Model evaluate:")
             request_signals = prediction_request(request, self.db_conn)
             self.logger.info('Finished loading request eeg signals. size = %s'% str(np.shape(request_signals)))
             self.logger.info('Starting prediction...')
             prediction = self.model.predict(request_signals)
             self.logger.info('Finished prediction')
-            results_db(prediction,request,self.db_conn)
-            return prediction
+            predictions_db(prediction,request,self.db_conn)
+            self.logger.info('Finished updating predictions to DB')
+            return
         except:
             print(sys.exc_info())
 
-
-
-    def validate(self,results):
-        validate_user_results(results,self.db_conn)
+    def validate(self,request):
+        self.logger.info("in Stsm Model validate:")
+        validate_user_results(request,self.db_conn)
         return
 
 

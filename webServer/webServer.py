@@ -23,24 +23,29 @@ stsm_model = None
 def predict():
     try:
         print('request.get_json()', request.get_json())
+        stsm_model.evaluate(request.get_json())
         return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
     except:
-        logger.error('ERROR: %s' % (sys.exc_info()))
+        logger.error('ERROR: %s'%sys.exc_info())
         return json.dumps({'msg': 'Prediction process failed', 'success': False})
 
 
-@app.route('/stsm/algorithms/validate')
+@app.route('/stsm/algorithms/validate',methods=['POST'])
 def validate():
-    return jsonify(stsm_model.evaluate(request.form.getlist('arr', type=int)))
-    return json.dumps({'ok': True})
+    try:
+        print('request.get_json()', request.get_json())
+        stsm_model.validate(request.get_json())
+        return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
+    except:
+        logger.error(sys.exc_info())
+        return json.dumps({'msg': 'Prediction process failed', 'success': False})
 
 
 if __name__ == '__main__':
     try:
         logger = Logger().get_logger()
         logger.info('Starting web server...')
-
-        stsm_model = StsmPredictionModel()
+        stsm_model = StsmPredictionModel(logger)
         stsm_model.load_model()
         stsm_model.connect()
         app.run(host='0.0.0.0', port=3100)

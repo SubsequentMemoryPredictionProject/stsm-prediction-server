@@ -17,7 +17,7 @@ def prediction_request(request,conn):
     request_signals =[]
     user_id = request['user_id']
     print(user_id)
-    subjects_words = ast.literal_eval(request['subjectWords'])
+    subjects_words = request['subjects_and_word_ids']
     print(subjects_words)
     for i in subjects_words:
         print(subjects_words[i])
@@ -25,6 +25,5 @@ def prediction_request(request,conn):
             prediction_details = " AND user_id=" + str(user_id) + " AND subject_id=" + str(i)\
                          + " AND word_id=" + str(subjects_words[i][j])
             #TODO change table to user_data
-            request_signals.extend(get_signals(conn,prediction_details,'user_data'))
-    print(np.shape(request_signals))
+            request_signals.extend(get_signals(conn,prediction_details,'data_set'))
     return request_signals
