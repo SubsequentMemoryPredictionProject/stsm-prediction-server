@@ -19,7 +19,7 @@ stsm_model = None
 
 # TODO comments
 
-@app.route('/stsm/algorithms/predict/', methods=['POST'])
+@app.route('/stsm/algorithms/predict/', methods=['post'])
 def predict():
     try:
         print('request', request.get_json()['subjects_and_word_ids'])
