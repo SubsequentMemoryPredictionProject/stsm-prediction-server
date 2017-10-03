@@ -19,7 +19,7 @@ stsm_model = None
 
 # TODO comments
 
-@app.route('/stsm/algorithms/predict/', methods=['GET', 'POST'])
+@app.route('/stsm/algorithms/predict', methods=['GET', 'POST'])
 def predict():
     try:
         print('request.form', request.form)
