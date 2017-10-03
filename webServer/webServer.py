@@ -23,7 +23,7 @@ stsm_model = None
 def predict():
     try:
         print('request', request)
-        print('request.get_json()', request.get_json())
+        print('request.values', request.values)
         stsm_model.evaluate(request.get_json())
         print('returning Success=True')
         return json.dumps({'Success': True})
