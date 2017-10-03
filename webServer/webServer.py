@@ -22,13 +22,15 @@ stsm_model = None
 @app.route('/stsm/algorithms/predict/', methods=['POST'])
 def predict():
     try:
-        print('request', request)
-        print('request.values', request.values)
-        stsm_model.evaluate(request.get_json())
+        print('request.data', request.data)
+        print('request.args', request.args)
+        print('request.form', request.form)
+
+        #stsm_model.evaluate(request.get_json())
         print('returning Success=True')
-        return json.dumps({'Success': True})
+        return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
     except:
-        return json.dumps({'Success': False})
+        return json.dumps({'msg': 'Prediction process failed', 'success': False})
 
 
 @app.route('/stsm/algorithms/validate/')
