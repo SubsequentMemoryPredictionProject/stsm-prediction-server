@@ -22,11 +22,7 @@ stsm_model = None
 @app.route('/stsm/algorithms/predict/', methods=['post'])
 def predict():
     try:
-        print('request.get_json()', request.get_json())
-        print('request.form', request.form)
-        #print('request.get_json(force=True)', request.get_json(force=True))
-
-        print('returning Success=True')
+        print('request.data', request.data)
         return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
     except:
         logger.error('ERROR: %s' % (sys.exc_info()))
