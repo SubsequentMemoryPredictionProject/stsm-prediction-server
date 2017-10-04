@@ -5,7 +5,7 @@ import ast
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 
-from flask import Flask, jsonify, request, send_file
+from flask import Flask, jsonify, request, send_file, make_response
 import json
 from logger import Logger
 import config as cfg
@@ -30,12 +30,13 @@ def predict():
         return json.dumps({'msg': 'Prediction process failed', 'success': False})
 
 
-@app.route('/stsm/algorithms/validate',methods=['POST'])
+@app.route('/stsm/algorithms/validate',methods=['POST','GET'])
 def validate():
     try:
         print('request.get_json()', request.get_json())
-        validation_file = stsm_model.validate(request.get_json())
+        validation_file = 'webServer\\' +  stsm_model.validate(request.get_json())
         print(validation_file)
+
         return send_file (validation_file,as_attachment=True), \
                json.dumps({'msg': 'Validation process was done successfully', 'success': True})
     except:
