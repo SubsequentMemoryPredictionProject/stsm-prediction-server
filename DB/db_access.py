@@ -99,6 +99,7 @@ def fix_missing_signals(electrode):
     return np.reshape(imp.transform([electrode]), NUM_FEATURES)
 
 
+# functions for choosing parameters (averaged electrode , duration)
 def choose_signals(db, elec, duration):
     print('in get signals')
     signals = []

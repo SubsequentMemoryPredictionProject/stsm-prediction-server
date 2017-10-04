@@ -7,7 +7,7 @@ import numpy as np
 
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
-from prediction.load_request import prediction_request
+from prediction.load_request import prediction_request_signals
 from prediction.report_predictions import predictions_db
 import config as cfg
 from model_evaluation.validation_report import validate_user_results
@@ -23,7 +23,7 @@ class StsmPredictionModel:
 
     def load_model(self):
         try:
-            self.model = joblib.load('mlp_model.pkl')
+            self.model = joblib.load('C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\mlp_model.pkl')
             self.logger.info('Model loaded successfully')
         except:
             self.logger.error('Error loading model - %s' % sys.exc_info())
@@ -43,7 +43,7 @@ class StsmPredictionModel:
     def evaluate(self, request):
         try:
             self.logger.info("in Stsm Model evaluate:")
-            request_signals = prediction_request(request, self.db_conn)
+            request_signals = prediction_request_signals(request, self.db_conn)
             self.logger.info('Finished loading request eeg signals. size = %s'% str(np.shape(request_signals)))
             self.logger.info('Starting prediction...')
             prediction = self.model.predict(request_signals)
@@ -56,8 +56,8 @@ class StsmPredictionModel:
 
     def validate(self,request):
         self.logger.info("in Stsm Model validate:")
-        validate_user_results(request,self.db_conn)
-        return
+        validation_file = validate_user_results(request,self.db_conn)
+        return validation_file
 
 
 

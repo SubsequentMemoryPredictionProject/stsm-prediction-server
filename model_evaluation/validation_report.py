@@ -1,14 +1,18 @@
 import ast
+import csv
 from DB.db_access import get_results
+from model_evaluation.test_model import evaluate_model
 
 
 def validate_user_results(request,db):
     query = create_user_query(request)
-    true_values = get_results(db,query,'data_set')
-    #pred_values = get_results(db,query,'untagged_predictions')
+    true_values = get_results(db, query, 'data_set')
+    pred_values = get_results(db, query, 'data_set')
     print(true_values)
-    #print(pred_values)
-    return
+    print(pred_values)
+    precision, recall, f1 = evaluate_model(true_values,pred_values)
+    return model_evaluation_file(precision, recall, f1)
+
 
 def create_user_query(request):
     print(request)
@@ -25,3 +29,19 @@ def create_user_query(request):
     query = query[:-2] + ');'
     print(query)
     return query
+
+
+# create csv file with results scores
+def model_evaluation_file( precision,recall,f1):
+    func_name = ['precision:','recall:','F1:']
+    model_scores = [precision,recall,f1]
+
+    filename = "results validation " + ".csv"
+    file = open(filename, "w",newline='')
+    writer = csv.writer(file, delimiter=',')
+    writer.writerow(["","stm","stm confidence level","stm remember/know","ltm","ltm confidence level","ltm remember/know"])
+    for name,score in zip(func_name,model_scores):
+        score.insert(0,name)
+        writer.writerow(score)
+    file.close()
+    return filename

@@ -5,7 +5,7 @@ import ast
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 import json
 from logger import Logger
 import config as cfg
@@ -26,7 +26,7 @@ def predict():
         stsm_model.evaluate(request.get_json())
         return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
     except:
-        logger.error('ERROR: %s'%sys.exc_info())
+        logger.error('ERROR: %s'%str(sys.exc_info()))
         return json.dumps({'msg': 'Prediction process failed', 'success': False})
 
 
@@ -34,11 +34,12 @@ def predict():
 def validate():
     try:
         print('request.get_json()', request.get_json())
-        stsm_model.validate(request.get_json())
-        return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
+        validation_file = stsm_model.validate(request.get_json())
+        return send_file (validation_file,as_attachment=True), \
+               json.dumps({'msg': 'Validation process was done successfully', 'success': True})
     except:
-        logger.error(sys.exc_info())
-        return json.dumps({'msg': 'Prediction process failed', 'success': False})
+        logger.error('Error : %s'%str(sys.exc_info()))
+        return json.dumps({'msg': 'Validation process failed', 'success': False})
 
 
 if __name__ == '__main__':
