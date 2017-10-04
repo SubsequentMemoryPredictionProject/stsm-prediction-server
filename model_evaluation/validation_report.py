@@ -33,6 +33,7 @@ def create_user_query(request):
 
 # create csv file with results scores
 def model_evaluation_file( precision,recall,f1):
+    print('in create file')
     func_name = ['precision:','recall:','F1:']
     model_scores = [precision,recall,f1]
 

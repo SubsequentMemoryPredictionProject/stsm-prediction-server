@@ -35,6 +35,7 @@ def validate():
     try:
         print('request.get_json()', request.get_json())
         validation_file = stsm_model.validate(request.get_json())
+        print(validation_file)
         return send_file (validation_file,as_attachment=True), \
                json.dumps({'msg': 'Validation process was done successfully', 'success': True})
     except:
