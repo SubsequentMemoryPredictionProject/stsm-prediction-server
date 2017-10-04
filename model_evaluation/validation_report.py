@@ -27,6 +27,7 @@ def create_user_query(request):
                                  + " AND word_id=" + str(subjects_words[i][j]) + ') OR'
             query = query + request_details
     query = query[:-2] + ');'
+    print(query)
     return query
 
 
