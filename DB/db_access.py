@@ -80,9 +80,16 @@ def float_arr(string):
 def get_results(db ,user_query='',table='data_set'):
     print('in get results')
     results = []
+    if table!='untagged_predictions':
+        user_query = ' WHERE EEG_data_section=1 AND' + user_query
+    else:
+        user_query = ' WHERE' + user_query
+    print(user_query)
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query
+             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query
+    print(query)
     data_set = get_data(db, query)
+    print(np.shape(data_set))
     for row in data_set:
         # ignore missing words
         #if row[1] == 0 or row[4] == 0:
