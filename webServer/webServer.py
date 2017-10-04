@@ -52,7 +52,7 @@ if __name__ == '__main__':
         app.run(host='0.0.0.0', port=3100)
 
     except:
-        logger.error('ERROR: %s' % (sys.exc_info()))
+        logger.error('ERROR: %s' % str(sys.exc_info()))
         stsm_model.disconnect()
         logger.info('disconnected from db')
         raise

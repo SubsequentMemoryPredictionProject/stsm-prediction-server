@@ -23,10 +23,10 @@ class StsmPredictionModel:
 
     def load_model(self):
         try:
-            self.model = joblib.load('C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\mlp_model.pkl')
+            self.model = joblib.load('mlp_model.pkl')
             self.logger.info('Model loaded successfully')
         except:
-            self.logger.error('Error loading model - %s' % sys.exc_info())
+            self.logger.error('Error loading model - %s' % str(sys.exc_info()))
 
     def connect(self):
         try:
@@ -34,7 +34,7 @@ class StsmPredictionModel:
                              , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
             self.logger.info('Connected to DB')
         except:
-            self.logger.error('Error connecting to DB - %s' % sys.exc_info())
+            self.logger.error('Error connecting to DB - %s' % str(sys.exc_info()))
 
     def disconnect(self):
         self.db_conn.close()
