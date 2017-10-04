@@ -10,6 +10,7 @@ NUM_ELECTRODES = 6
 # get data from DB
 def get_data(db, query):
     print("in db access")
+    print(query)
     cursor = db.cursor()
     cursor.execute(query)
     data = cursor.fetchall()
@@ -38,7 +39,6 @@ def get_signals(db, user_query='',table='data_set'):
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
              signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query +';'
     section_one = get_data(db, query1)
-    print(query1)
     print("got section one")
     section_two = get_data(db, query2)
     print("got section 2")
