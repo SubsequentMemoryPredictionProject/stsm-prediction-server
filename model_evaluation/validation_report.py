@@ -36,7 +36,7 @@ def model_evaluation_file( precision,recall,f1):
     func_name = ['precision:','recall:','F1:']
     model_scores = [precision,recall,f1]
 
-    filename = "results validation " + ".csv"
+    filename = "results validation" + ".csv"
     file = open(filename, "w",newline='')
     writer = csv.writer(file, delimiter=',')
     writer.writerow(["","stm","stm confidence level","stm remember/know","ltm","ltm confidence level","ltm remember/know"])
