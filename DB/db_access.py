@@ -31,7 +31,7 @@ def get_signals(db, user_query='',table='data_set'):
     print('in get signals')
     signals = []
     word = []
-    num_words = int(get_data(db,'SELECT count(*) FROM user_data;'))
+    num_words = int(get_data(db,'SELECT count(*) FROM user_data;')[0])
     print(num_words)
     if user_query:
         user_query = 'AND ' +user_query
