@@ -50,9 +50,10 @@ class StsmPredictionModel:
             self.logger.info('Finished prediction')
             predictions_db(prediction,request,self.db_conn)
             self.logger.info('Finished updating predictions to DB')
-            return
+            return True
         except:
             self.logger.error('Error in prediction - %s'%str(sys.exc_info()))
+            return False
 
     def validate(self,request):
         self.logger.info("in Stsm Model validate:")

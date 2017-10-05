@@ -23,8 +23,13 @@ stsm_model = None
 def predict():
     try:
         print('request.get_json()', request.get_json())
-        stsm_model.evaluate(request.get_json())
-        return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
+        success = stsm_model.evaluate(request.get_json())
+        if success:
+            return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
+        else:
+            logger.error('Prediction process failed  - %s'%str(sys.exc_info()))
+            return json.dumps({'msg': 'Prediction process failed', 'success': False})
+
     except:
         logger.error('ERROR: %s'%str(sys.exc_info()))
         return json.dumps({'msg': 'Prediction process failed', 'success': False})
