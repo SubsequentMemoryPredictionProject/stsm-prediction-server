@@ -10,7 +10,6 @@ NUM_ELECTRODES = 6
 # get data from DB
 def get_data(db, query):
     print("in db access")
-    print(query)
     cursor = db.cursor()
     cursor.execute(query)
     data = cursor.fetchall()
@@ -32,7 +31,8 @@ def get_signals(db, user_query='',table='data_set'):
     print('in get signals')
     signals = []
     word = []
-    print(get_data(db,'SELECT count(*) FROM user_data;'))
+    num_words = int(get_data(db,'SELECT count(*) FROM user_data;'))
+    print(num_words)
     if user_query:
         user_query = 'AND ' +user_query
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
@@ -47,7 +47,7 @@ def get_signals(db, user_query='',table='data_set'):
     print("got section 2")
     print(np.shape(section_one))
     print(np.shape(section_two))
-    for i in range(len(section_one)):
+    for i in range(num_words):
         print("word  = ",i)
         for j in range(NUM_ELECTRODES):
             word.extend(float_arr(section_one[i][j]))
