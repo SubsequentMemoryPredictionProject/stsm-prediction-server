@@ -46,8 +46,6 @@ def get_signals(db, user_query='',table='data_set'):
     print("got section 2")
     print(np.shape(section_one))
     print(np.shape(section_two))
-    print(section_one)
-    print(section_two)
     for i in range(len(section_one)):
         print("word  = ",i)
         for j in range(NUM_ELECTRODES):
