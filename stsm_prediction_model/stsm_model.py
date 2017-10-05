@@ -52,12 +52,16 @@ class StsmPredictionModel:
             self.logger.info('Finished updating predictions to DB')
             return
         except:
-            print(sys.exc_info())
+            self.logger.error('Error in prediction - %s'%str(sys.exc_info()))
 
     def validate(self,request):
         self.logger.info("in Stsm Model validate:")
-        validation_file = validate_user_results(request,self.db_conn)
-        return validation_file
+        try:
+            validation_file = validate_user_results(request,self.db_conn)
+            self.logger.info('Finished validation - results file created')
+            return validation_file
+        except:
+            self.logger.error('Error in validation - %s' %str(sys.exc_info()))
 
 
 

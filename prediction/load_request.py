@@ -15,5 +15,5 @@ from model_evaluation.validation_report import create_user_query
 def prediction_request_signals(request,conn):
     prediction_details = create_user_query(request)
     #TODO change table to user_data
-    request_signals = get_signals(conn,prediction_details,'data_set')
+    request_signals = get_signals(conn,prediction_details,'user_data')
     return request_signals

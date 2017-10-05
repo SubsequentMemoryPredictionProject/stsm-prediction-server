@@ -32,7 +32,7 @@ def get_signals(db, user_query='',table='data_set'):
     print('in get signals')
     signals = []
     word = []
-    if len((user_query))>0:
+    if user_query:
         user_query = 'AND ' +user_query
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
