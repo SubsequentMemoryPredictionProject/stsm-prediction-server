@@ -49,7 +49,7 @@ try:
             for c in C:
                 for kernel in kernels:
                     X = choose_signals(conn, elec, dur)
-                    svm_model = svm.SVC(C=c,kernel=kernel,max_iter=4500)
+                    svm_model = svm.SVC(C=c,kernel=kernel,max_iter=7500)
                     multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
                     print(np.shape(X))
                     print(np.shape(Y))
