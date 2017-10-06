@@ -42,6 +42,7 @@ try:
     not_remember_precision =5*[0]
     not_remember_recall = 5*[0]
     not_remember_f1 = 5*[0]
+    scaler = StandardScaler(copy=False)
 
     for elec in electrode:
         for dur in eeg_duration:
