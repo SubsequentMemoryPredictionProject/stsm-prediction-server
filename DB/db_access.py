@@ -85,12 +85,12 @@ def float_arr(string):
 def get_results(db ,user_query='',table='data_set'):
     print('in get results')
     results = []
-    if user_query:
-        user_query = 'AND ' +user_query
     if table!='untagged_predictions':
+        if user_query:
+            user_query = 'AND ' + user_query
         user_query = ' WHERE EEG_data_section=1 ' + user_query
-    else:
-        user_query = ' WHERE' + user_query
+    else :
+        user_query = ' WHERE ' + user_query
     print(user_query)
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
              ltm_confidence_level, ltm_remember_know FROM ' + table + user_query
