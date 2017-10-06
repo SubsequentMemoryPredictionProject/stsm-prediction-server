@@ -7,6 +7,8 @@ import numpy as np
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix
 from sklearn import svm
+from sklearn.preprocessing import StandardScaler
+
 
 
 
@@ -46,7 +48,7 @@ try:
             for c in C:
                 for kernel in kernels:
                     X = choose_signals(conn, elec, dur)
-                    svm_model = svm.SVC(C=c,kernel=kernel,max_iter=200)
+                    svm_model = svm.SVC(C=c,kernel=kernel,max_iter=300)
                     multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
                     print(np.shape(X))
                     print(np.shape(Y))
@@ -54,6 +56,9 @@ try:
                     for i in range(5):
                         X_train, X_test,Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
                         multi_svm_model.fit(X_train, Y_train)
+                        scaler.fit(X_train)
+                        scaler.transform(X_train)
+                        scaler.transform(X_test)
                         print('finished model fit')
                         y_pred = separate_results(multi_svm_model.predict(X_test))[0]
                         y_true = separate_results(Y_test)[0]
