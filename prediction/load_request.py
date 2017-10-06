@@ -20,7 +20,7 @@ def prediction_request_signals(request,conn):
     logger.info('In prediction_request_signals')
     logger.info("User request: %s" % request)
     if not request:
-        msg = "Couldn't get prediction eeg  signals : user request is empty"
+        msg = "user request is empty"
         return [], msg
     prediction_details = create_user_query(request)
     request_signals = get_signals(conn,prediction_details,'user_data')

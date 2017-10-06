@@ -7,7 +7,7 @@ import ast
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 
-from flask import Flask, jsonify, request, send_file, make_response,send_from_directory
+from flask import Flask, jsonify, request, send_file,send_from_directory
 import json
 from logger import Logger
 import config as cfg
@@ -29,7 +29,7 @@ def predict():
             return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
         else:
             logger.info('Prediction process failed  - %s'% msg)
-            return json.dumps({'msg': msg, 'success': False})
+            return json.dumps({'msg':'Prediction process failed - ' + msg, 'success': False})
 
     except:
         logger.error('ERROR: %s'%str(sys.exc_info()))
@@ -70,10 +70,10 @@ if __name__ == '__main__':
 
     except:
         logger.error('ERROR: %s' % str(sys.exc_info()))
-        stsm_model.disconnect()
-        logger.info('disconnected from db')
+        #stsm_model.disconnect()
         raise
     finally:
-        stsm_model.disconnect()
+        print('bye')
+        #stsm_model.disconnect()
 
 
