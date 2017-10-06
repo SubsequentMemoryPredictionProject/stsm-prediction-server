@@ -1,5 +1,7 @@
 import os
 import sys
+import signal
+
 import ast
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -49,7 +51,18 @@ def validate():
         return json.dumps({'msg': 'Validation process failed', 'success': False})
 
 
+
+
+
 if __name__ == '__main__':
+
+    def signal_handler(signal, frame):
+        logger.info('Recived signal - %s', signal)
+        stsm_model.disconnect()
+        sys.exit(0)
+
+        signal.signal(signal.SIGTERM, signal_handler)
+        signal.signal(signal.SIGINT, signal_handler)
     try:
         logger = Logger().get_logger()
         logger.info('Starting web server...')
@@ -65,3 +78,5 @@ if __name__ == '__main__':
         raise
     finally:
         stsm_model.disconnect()
+
+
