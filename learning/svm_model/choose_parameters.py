@@ -26,7 +26,6 @@ try:
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
     # parameters to try:
-    kernels = []
     C = [1e-2, 1]
     gamma_array = [1e-1, 1, 1e1]
     electrode = [1, 2, 3, 4]
@@ -68,7 +67,7 @@ try:
                         normalize_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
                         average_matrix.append(normalize_matrix)
                         matrix =[]
-                    print("params: elctrode - %d, duration = %d, layers = %s, activation = %s" % (elec, dur, C, gamma))
+                    print("params: elctrode - %d, duration = %d, C = %s, gamma = %s" % (elec, dur, c, gamma))
                     print("precision = %f"%(np.mean(precision)))
                     print("recll = %f"%(np.mean(recall)))
                     print("f1 = %f" % (np.mean(f1)))
