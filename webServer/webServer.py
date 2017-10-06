@@ -61,7 +61,7 @@ def main():
         logger.info('Starting web server...')
         stsm_model = StsmPredictionModel(logger)
         stsm_model.load_model()
-        # stsm_model.connect()
+        stsm_model.connect()
         app.run(host='0.0.0.0', port=3100)
 
     except:
