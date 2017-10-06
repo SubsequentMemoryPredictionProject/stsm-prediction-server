@@ -26,7 +26,8 @@ try:
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
     # parameters to try:
-    C = [1e-2, 1, 1e2]
+    kernels = []
+    C = [1e-2, 1]
     gamma_array = [1e-1, 1, 1e1]
     electrode = [1, 2, 3, 4]
     eeg_duration = [240, 256, 260]
