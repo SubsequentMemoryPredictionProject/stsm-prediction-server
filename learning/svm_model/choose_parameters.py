@@ -1,6 +1,5 @@
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
-from sklearn.neural_network import MLPClassifier
 import pymysql.connections
 import sys, os
 import numpy as np
@@ -48,7 +47,7 @@ try:
         for dur in eeg_duration:
             for c in C:
                 X = choose_signals(conn, elec, dur)
-                svm_model = svm.LinearSVC(C=c)
+                svm_model = svm.LinearSVC(C=c,max_iter=500)
                 multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
                 print(np.shape(X))
                 print(np.shape(Y))

@@ -24,13 +24,12 @@ stsm_model = None
 @app.route('/stsm/algorithms/predict', methods=['POST'])
 def predict():
     try:
-        print('request.get_json()', request.get_json())
-        success = stsm_model.evaluate(request.get_json())
-        if success:
+        msg = stsm_model.evaluate(request.get_json())
+        if msg=='success':
             return json.dumps({'msg': 'Prediction process was done successfully', 'success': True})
         else:
-            logger.error('Prediction process failed  - %s'%str(sys.exc_info()))
-            return json.dumps({'msg': 'Prediction process failed', 'success': False})
+            logger.info('Prediction process failed  - %s'% msg)
+            return json.dumps({'msg': msg, 'success': False})
 
     except:
         logger.error('ERROR: %s'%str(sys.exc_info()))
@@ -50,11 +49,11 @@ def validate():
         logger.error('Error : %s'%str(sys.exc_info()))
         return json.dumps({'msg': 'Validation process failed', 'success': False})
 
+
 def signal_handler(signal, frame):
     logger.info('Recived signal - %s', signal)
     stsm_model.disconnect()
     sys.exit(0)
-
 
 
 if __name__ == '__main__':
