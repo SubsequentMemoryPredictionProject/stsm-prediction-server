@@ -51,7 +51,7 @@ def validate():
 
 
 def signal_handler(signal, frame):
-    logger.info('Recived signal - %s', signal)
+    logger.info('Recived signal - %s' % signal)
     stsm_model.disconnect()
     sys.exit(0)
 
