@@ -27,7 +27,7 @@ try:
 
     # parameters to try:
     C = [1e-2, 1]
-    gamma_array = [1e-1, 1, 1e1]
+    kernels = ['linear', 'poly']
     electrode = [1, 2, 3, 4]
     eeg_duration = [240, 256, 260]
 
@@ -44,9 +44,9 @@ try:
     for elec in electrode:
         for dur in eeg_duration:
             for c in C:
-                for gamma in gamma_array:
+                for kernel in kernels:
                     X = choose_signals(conn, elec, dur)
-                    svm_model = svm.SVC(C=c,gamma=gamma)
+                    svm_model = svm.SVC(C=c,kernel=kernel)
                     multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
                     print(np.shape(X))
                     print(np.shape(Y))
@@ -67,7 +67,7 @@ try:
                         normalize_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
                         average_matrix.append(normalize_matrix)
                         matrix =[]
-                    print("params: elctrode - %d, duration = %d, C = %s, gamma = %s" % (elec, dur, c, gamma))
+                    print("params: elctrode - %d, duration = %d, C = %s, kernel = %s" % (elec, dur, c, kernel))
                     print("precision = %f"%(np.mean(precision)))
                     print("recll = %f"%(np.mean(recall)))
                     print("f1 = %f" % (np.mean(f1)))

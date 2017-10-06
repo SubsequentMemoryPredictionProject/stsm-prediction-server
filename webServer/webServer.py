@@ -50,23 +50,18 @@ def validate():
         logger.error('Error : %s'%str(sys.exc_info()))
         return json.dumps({'msg': 'Validation process failed', 'success': False})
 
+
 def signal_handler(signal, frame):
     logger.info('Recived signal - %s', signal)
     stsm_model.disconnect()
     sys.exit(0)
 
-
-
-if __name__ == '__main__':
-
-    signal.signal(signal.SIGTERM, signal_handler)
-    signal.signal(signal.SIGINT, signal_handler)
+def main():
     try:
-        logger = Logger().get_logger()
         logger.info('Starting web server...')
         stsm_model = StsmPredictionModel(logger)
         stsm_model.load_model()
-        stsm_model.connect()
+        # stsm_model.connect()
         app.run(host='0.0.0.0', port=3100)
 
     except:
@@ -76,5 +71,12 @@ if __name__ == '__main__':
         raise
     finally:
         stsm_model.disconnect()
+
+
+if __name__ == '__main__':
+    logger = Logger().get_logger()
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
+    main()
 
 
