@@ -29,7 +29,7 @@ try:
 
     # parameters to try:
     C = [1e-2, 1]
-    kernels = ['linear', 'poly']
+    kernels = ['linear', 'poly','rbf']
     electrode = [1, 2, 3, 4]
     eeg_duration = [240, 256, 260]
 
@@ -49,7 +49,7 @@ try:
             for c in C:
                 for kernel in kernels:
                     X = choose_signals(conn, elec, dur)
-                    svm_model = svm.SVC(C=c,kernel=kernel,max_iter=300)
+                    svm_model = svm.SVC(C=c,kernel=kernel,max_iter=500)
                     multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
                     print(np.shape(X))
                     print(np.shape(Y))
