@@ -47,7 +47,7 @@ try:
         for dur in eeg_duration:
             for c in C:
                 X = choose_signals(conn, elec, dur)
-                svm_model = svm.LinearSVC(C=c,max_iter=500)
+                svm_model = svm.LinearSVC(C=c,max_iter=500,verbose=True)
                 multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
                 print(np.shape(X))
                 print(np.shape(Y))
