@@ -26,6 +26,7 @@ class StsmPredictionModel:
             self.model = joblib.load('C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\mlp_model.pkl')
             self.logger.info('Model loaded successfully')
         except:
+            raise 
             self.logger.error('Error loading model - %s' % str(sys.exc_info()))
 
     def connect(self):

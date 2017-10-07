@@ -28,7 +28,7 @@ try:
 
     # parameters to try:
     C = [1e-2, 1]
-    kernels = ['linear', 'poly','rbf']
+    kernels = ['linear', 'poly']
     electrode = [1, 2, 3, 4]
     eeg_duration = [240, 256, 260]
 
@@ -45,42 +45,43 @@ try:
 
     for elec in electrode:
         for dur in eeg_duration:
+            X = choose_signals(conn, elec, dur)
             for c in C:
-                X = choose_signals(conn, elec, dur)
-                svm_model = svm.LinearSVC(C=c,max_iter=500,verbose=True)
-                multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
-                print(np.shape(X))
-                print(np.shape(Y))
-                # cross validation
-                for i in range(5):
-                    X_train, X_test,Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
-                    # scaler.fit(X_train)
-                    # scaler.transform(X_train)
-                    # scaler.transform(X_test)
-                    multi_svm_model.fit(X_train, Y_train)
-                    print('finished model fit')
-                    y_pred = separate_results(multi_svm_model.predict(X_test))[0]
-                    y_true = separate_results(Y_test)[0]
-                    precision[i] = metrics.precision_score(y_true,y_pred)
-                    recall[i] = metrics.recall_score(y_true,y_pred)
-                    f1[i] = metrics.f1_score(y_true,y_pred)
-                    not_remember_precision[i] = metrics.precision_score(y_true, y_pred, pos_label=0)
-                    not_remember_recall[i] = metrics.recall_score(y_true, y_pred, pos_label=0)
-                    not_remember_f1[i] = metrics.f1_score(y_true,y_pred,pos_label=0)
-                    matrix = confusion_matrix(y_true, y_pred)
-                    normalize_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
-                    average_matrix.append(normalize_matrix)
-                    matrix =[]
-                print("params: elctrode - %d, duration = %d, C = %s" % (elec, dur, c))
-                print("precision = %f"%(np.mean(precision)))
-                print("recll = %f"%(np.mean(recall)))
-                print("f1 = %f" % (np.mean(f1)))
-                print("negative lable precision = %f" % (np.mean(not_remember_precision)))
-                print("negative lable recll = %f" % (np.mean(not_remember_recall)))
-                print("negative lable f1 = %f" % (np.mean(not_remember_f1)))
-                print("confusion matrix =")
-                print(np.mean(average_matrix,axis=0))
-                average_matrix =[]
+                for kernel in kernels:
+                    svm_model = svm.SVC(C=c,max_iter=5500,verbose=True,kernel=kernel)
+                    multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
+                    print(np.shape(X))
+                    print(np.shape(Y))
+                    # cross validation
+                    for i in range(5):
+                        X_train, X_test,Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
+                        # scaler.fit(X_train)
+                        # scaler.transform(X_train)
+                        # scaler.transform(X_test)
+                        multi_svm_model.fit(X_train, Y_train)
+                        print('finished model fit')
+                        y_pred = separate_results(multi_svm_model.predict(X_test))[0]
+                        y_true = separate_results(Y_test)[0]
+                        precision[i] = metrics.precision_score(y_true,y_pred)
+                        recall[i] = metrics.recall_score(y_true,y_pred)
+                        f1[i] = metrics.f1_score(y_true,y_pred)
+                        not_remember_precision[i] = metrics.precision_score(y_true, y_pred, pos_label=0)
+                        not_remember_recall[i] = metrics.recall_score(y_true, y_pred, pos_label=0)
+                        not_remember_f1[i] = metrics.f1_score(y_true,y_pred,pos_label=0)
+                        matrix = confusion_matrix(y_true, y_pred)
+                        normalize_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
+                        average_matrix.append(normalize_matrix)
+                        matrix =[]
+                    print("params: elctrode - %d, duration = %d, C = %s, kernel = %s" % (elec, dur, c,kernel))
+                    print("precision = %f"%(np.mean(precision)))
+                    print("recll = %f"%(np.mean(recall)))
+                    print("f1 = %f" % (np.mean(f1)))
+                    print("negative lable precision = %f" % (np.mean(not_remember_precision)))
+                    print("negative lable recll = %f" % (np.mean(not_remember_recall)))
+                    print("negative lable f1 = %f" % (np.mean(not_remember_f1)))
+                    print("confusion matrix =")
+                    print(np.mean(average_matrix,axis=0))
+                    average_matrix =[]
 except:
     print(sys.exc_info()[0])
     raise
