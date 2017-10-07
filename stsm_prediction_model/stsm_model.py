@@ -43,17 +43,17 @@ class StsmPredictionModel:
     def evaluate(self, request):
         try:
             self.logger.info("In Stsm Model evaluate:")
-            request_signals, msg = prediction_request_signals(request, self.db_conn)
+            request_signals = prediction_request_signals(request, self.db_conn)
             self.logger.info('Finished loading request eeg signals. size = %s'% str(np.shape(request_signals)))
             self.logger.info('Starting prediction...')
             prediction = self.model.predict(request_signals)
             self.logger.info('Finished prediction')
             predictions_db(prediction,request,self.db_conn)
             self.logger.info('Finished updating predictions to DB')
-            return msg
+            return
         except:
-            self.logger.error('Error in prediction - %s' %msg)
-            return msg
+            self.logger.error('Error in prediction - %s' %sys.exc_info())
+            return
 
     def validate(self,request):
         self.logger.info("in Stsm Model validate:")

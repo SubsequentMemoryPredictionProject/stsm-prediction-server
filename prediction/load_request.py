@@ -24,4 +24,17 @@ def prediction_request_signals(request,conn):
         return [], msg
     prediction_details = create_user_query(request)
     request_signals = get_signals(conn,prediction_details,'user_data')
-    return request_signals, msg
+    return request_signals
+
+
+def check_request(request):
+    if not request:
+        msg = "user request is empty"
+    user_id = request['user_id']
+
+    if not user_id:
+        msg = 'no user id'
+    if len(user_id)>1:
+        msg = 'received more than one user id'
+
+
