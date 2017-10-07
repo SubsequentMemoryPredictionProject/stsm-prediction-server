@@ -56,7 +56,6 @@ try:
     print(np.shape(Y_train))
     print(np.shape(Y_test))
 
-    multi_mlp_model.estimator_s.classes_
     Y_pred = multi_mlp_model.predict(X_test)
     prob = multi_mlp_model.predict_proba(X_test)
     prob_stm = prob[0]
@@ -76,10 +75,10 @@ try:
     prec,recall,f1,neg_prec,neg_recall,neg_f1 = evaluate_model(Y_test,Y_pred)
     writer.writerow(['Remember - precision,recall,f1:',prec[0],recall[0],f1[0]])
     writer.writerow(['Forget - precision,recall,f1:',neg_prec[0],neg_recall[0],neg_f1[0]])
-    writer.write('confusion-matrix (total=%d)'%(len(true_stm)))
+    writer.writerow(['confusion-matrix (total=%d)'%(len(true_stm))])
     writer.writerow(matrix[0])
     writer.writerow(matrix[1])
-    writer.write('Normalized confusion matrix:')
+    writer.writrow(['Normalized confusion matrix:'])
     writer.writerow(normalized_matrix[0])
     writer.writerow(normalized_matrix[1])
     file.close()
