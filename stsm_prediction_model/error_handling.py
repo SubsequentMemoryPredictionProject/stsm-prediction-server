@@ -5,5 +5,6 @@ class Error(Exception):
 
 
 class LoadModelError(Error):
-    errorCode: 1000
-    message: 'Failed loading saved model'
+    def __init__(self, msg):
+        Error.__init__(self)
+        self.message: msg

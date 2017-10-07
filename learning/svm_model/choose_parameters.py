@@ -18,6 +18,7 @@ import config as cfg
 from DB.db_access import choose_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import separate_results
+from logger import Logger
 
 
 
@@ -25,6 +26,8 @@ from model_evaluation.test_model import separate_results
 try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
+
+    logger = Logger().get_logger()
 
     # parameters to try:
     C = [1e-2, 1]
@@ -72,15 +75,15 @@ try:
                         normalize_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
                         average_matrix.append(normalize_matrix)
                         matrix =[]
-                    print("params: elctrode - %d, duration = %d, C = %s, kernel = %s" % (elec, dur, c,kernel))
-                    print("precision = %f"%(np.mean(precision)))
-                    print("recll = %f"%(np.mean(recall)))
-                    print("f1 = %f" % (np.mean(f1)))
-                    print("negative lable precision = %f" % (np.mean(not_remember_precision)))
-                    print("negative lable recll = %f" % (np.mean(not_remember_recall)))
-                    print("negative lable f1 = %f" % (np.mean(not_remember_f1)))
-                    print("confusion matrix =")
-                    print(np.mean(average_matrix,axis=0))
+                    logger.info("params: elctrode - %d, duration = %d, C = %s, kernel = %s" % (elec, dur, c,kernel))
+                    logger.info("precision = %f"%(np.mean(precision)))
+                    logger.info("recll = %f"%(np.mean(recall)))
+                    logger.info("f1 = %f" % (np.mean(f1)))
+                    logger.info("negative lable precision = %f" % (np.mean(not_remember_precision)))
+                    logger.info("negative lable recll = %f" % (np.mean(not_remember_recall)))
+                    logger.info("negative lable f1 = %f" % (np.mean(not_remember_f1)))
+                    logger.info("confusion matrix =")
+                    logger.info(np.mean(average_matrix,axis=0))
                     average_matrix =[]
 except:
     print(sys.exc_info()[0])

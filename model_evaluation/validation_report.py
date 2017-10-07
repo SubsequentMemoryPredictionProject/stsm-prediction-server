@@ -6,12 +6,13 @@ from model_evaluation.test_model import evaluate_model
 
 def validate_user_results(request,db):
     query = create_user_query(request)
-    true_values = get_results(db, query, 'data_set')
+    true_values = get_results(db, query, 'user_data')
     pred_values = get_results(db, query, 'untagged_predictions')
     print(true_values)
     print(pred_values)
-    precision, recall, f1 = evaluate_model(true_values,pred_values)
-    return model_evaluation_file(precision, recall, f1)
+    precision_remember, recall_remember, f1_remember,precsion_forget,recall_forget,f1_forget\
+        = evaluate_model(true_values,pred_values)
+    return model_evaluation_file(precision_remember, recall_remember, f1_remember,precsion_forget,recall_forget,f1_forget)
 
 
 def create_user_query(request):
@@ -31,15 +32,13 @@ def create_user_query(request):
 
 
 # create csv file with results scores
-def model_evaluation_file( precision,recall,f1):
-    print('in create file')
-    func_name = ['precision:','recall:','F1:']
-    model_scores = [precision,recall,f1]
-
+def model_evaluation_file( precision_remember,recall_remember,f1_remember,precsion_foregt,recall_forget,f1_forget):
+    func_name = ['Precision-remember:','Recall-remember:','F1-remember:','Precision-forget:','Recall-forget:','F1-forget:']
+    model_scores = [precision_remember,recall_remember,f1_remember,precsion_foregt,recall_forget,f1_forget]
     filename = "validationScores" + ".csv"
     file = open(filename, "w",newline='')
     writer = csv.writer(file, delimiter=',')
-    writer.writerow(["","stm","stm confidence level","stm remember/know","ltm","ltm confidence level","ltm remember/know"])
+    writer.writerow(["","Stm","Stm confidence level","Stm remember/know","Ltm","Ltm confidence level","Ltm remember/know"])
     for name,score in zip(func_name,model_scores):
         score.insert(0,name)
         writer.writerow(score)
