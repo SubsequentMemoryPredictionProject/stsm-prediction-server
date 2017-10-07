@@ -11,7 +11,7 @@ from prediction.load_request import prediction_request_signals
 from prediction.report_predictions import predictions_db
 import config as cfg
 from model_evaluation.validation_report import validate_user_results
-from stsm_prediction_model.error_handling import LoadModelError
+#from stsm_prediction_model.error_handling import LoadModelError
 from logger import Logger
 #C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\
 

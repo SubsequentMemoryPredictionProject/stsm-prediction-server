@@ -6,7 +6,7 @@ import ast
 
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
-from stsm_prediction_model import error_handling
+#from stsm_prediction_model import error_handling
 from flask import Flask, jsonify, request, send_file,send_from_directory
 import json
 from logger import Logger
