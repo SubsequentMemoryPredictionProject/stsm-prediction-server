@@ -48,16 +48,16 @@ try:
             X = choose_signals(conn, elec, dur)
             for c in C:
                 for kernel in kernels:
-                    svm_model = svm.SVC(C=c,max_iter=20000,verbose=True,kernel=kernel)
+                    svm_model = svm.SVC(C=c,max_iter=5500,verbose=True,kernel=kernel)
                     multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
                     print(np.shape(X))
                     print(np.shape(Y))
                     # cross validation
                     for i in range(5):
                         X_train, X_test,Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
-                        # scaler.fit(X_train)
-                        # scaler.transform(X_train)
-                        # scaler.transform(X_test)
+                        scaler.fit(X_train)
+                        scaler.transform(X_train)
+                        scaler.transform(X_test)
                         multi_svm_model.fit(X_train, Y_train)
                         print('finished model fit')
                         y_pred = separate_results(multi_svm_model.predict(X_test))[0]
