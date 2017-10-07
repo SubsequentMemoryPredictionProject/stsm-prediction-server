@@ -45,9 +45,8 @@ try:
     del X
     del Y
     gc.collect()
-    scaler.fit(X_train)
-    scaler.transform(X_train)
-    scaler.transform(X_test)
+    X_train = scaler.fit_transform(X_train)
+    X_test=scaler.transform(X_test)
 
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     multi_mlp_model.fit(X_train, Y_train)
