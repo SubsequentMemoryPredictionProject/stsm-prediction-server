@@ -53,19 +53,15 @@ def signal_handler(signal, frame):
 
 if __name__ == '__main__':
 
-    signal.signal(signal.SIGTERM, signal_handler)
-    signal.signal(signal.SIGINT, signal_handler)
-    logger = Logger().get_logger()
-    logger.info('Starting web server...')
-    stsm_model = StsmPredictionModel(logger)
     try:
+        signal.signal(signal.SIGTERM, signal_handler)
+        signal.signal(signal.SIGINT, signal_handler)
+        logger = Logger().get_logger()
+        logger.info('Starting web server...')
+        stsm_model = StsmPredictionModel(logger)
         stsm_model.load_model()
-    except error_handling.LoadModelError as e:
-        logger.error(e.message)
-
         stsm_model.connect()
         app.run(host='0.0.0.0', port=3100)
-
     except:
         logger.error('ERROR: %s' % str(sys.exc_info()))
         #stsm_model.disconnect()
