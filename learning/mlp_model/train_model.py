@@ -54,6 +54,8 @@ try:
     print('finished model fit')
     print(np.shape(X_train))
     print(np.shape(X_test))
+    print(np.shape(Y_train))
+    print(np.shape(Y_test))
     Y_pred = multi_mlp_model.predict(X_test)
     prob = multi_mlp_model.predict_proba(X_test)
     prob_stm = prob[0]
