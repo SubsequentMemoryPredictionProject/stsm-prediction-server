@@ -1,4 +1,6 @@
 from DB.db_access import insert_data
+from DB.db_access import get_data
+from model_evaluation.validation_report import create_user_query
 
 
 # insert predictions to DB
@@ -19,3 +21,15 @@ def predictions_db(predictions, request,db):
     query = query[:-1] + ';'
     insert_data(db, query)
     return
+
+
+def delete_predictions_db(db,request):
+    print (get_data(db,'SELECT count(*) FROM untagged_predictions'))
+    user_query  = create_user_query(request)
+    query = 'DELETE FROM untagged_predictions WHERE'
+    query = query + user_query
+    insert_data(db,query)
+    print (get_data(db,'SELECT count(*) FROM untagged_predictions'))
+    return
+
+
