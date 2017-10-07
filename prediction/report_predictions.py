@@ -5,6 +5,7 @@ from model_evaluation.validation_report import create_user_query
 
 # insert predictions to DB
 def predictions_db(predictions, request,db):
+    delete_predictions_db(db, request)
     user_id = request['user_id']
     insert_result = 0
     subjects_words = request['subjects_and_word_ids']
