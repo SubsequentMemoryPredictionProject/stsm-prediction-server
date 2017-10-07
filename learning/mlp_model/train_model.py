@@ -41,7 +41,7 @@ try:
 
     # split data to training and testing set
     X_train, X_test, \
-        Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=0)
+        Y_train, Y_test = train_test_split(X, Y, test_size=0.25)
     del X
     del Y
     gc.collect()
