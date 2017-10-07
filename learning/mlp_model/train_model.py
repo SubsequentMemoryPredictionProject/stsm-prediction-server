@@ -52,6 +52,8 @@ try:
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     multi_mlp_model.fit(X_train, Y_train)
     print('finished model fit')
+    print(np.shape(X_train))
+    print(np.shape(X_test))
     Y_pred = multi_mlp_model.predict(X_test)
     prob = multi_mlp_model.predict_proba(X_test)
     prob_stm = prob[0]
