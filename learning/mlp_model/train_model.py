@@ -56,9 +56,8 @@ try:
     print(np.shape(X_test))
     print(np.shape(Y_train))
     print(np.shape(Y_test))
-    vrb =np.c_[X_test.ravel(), Y_test.ravel()]
-    print(np.shape(vrb))
 
+    multi_mlp_model.estimator_s.classes_
     Y_pred = multi_mlp_model.predict(X_test)
     prob = multi_mlp_model.predict_proba(X_test)
     prob_stm = prob[0]
@@ -69,7 +68,7 @@ try:
     print(prob_stm)
     print(pred_stm)
     print(true_stm)
-    filename = 'bestModelResultsStm.csv'
+    filename = 'bestModelResultsStm2.csv'
     file = open(filename, "w", newline='')
     writer = csv.writer(file, delimiter=',')
     writer.writerow(pred_stm)
@@ -78,10 +77,10 @@ try:
     prec,recall,f1,neg_prec,neg_recall,neg_f1 = evaluate_model(Y_test,Y_pred)
     writer.writerow(['Remember - precision,recall,f1:',prec[0],recall[0],f1[0]])
     writer.writerow(['Forget - precision,recall,f1:',neg_prec[0],neg_recall[0],neg_f1[0]])
-    writer.writerow('confusion-matrix (total=%d)'%(len(true_stm)))
+    writer.write('confusion-matrix (total=%d)'%(len(true_stm)))
     writer.writerow(matrix[0])
     writer.writerow(matrix[1])
-    writer.writerow('Normalized confusion matrix:')
+    writer.write('Normalized confusion matrix:')
     writer.writerow(normalized_matrix[0])
     writer.writerow(normalized_matrix[1])
     file.close()
