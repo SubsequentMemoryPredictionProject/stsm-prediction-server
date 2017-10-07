@@ -56,7 +56,8 @@ try:
     print(np.shape(X_test))
     print(np.shape(Y_train))
     print(np.shape(Y_test))
-    print(np.c_[X_test.ravel(), Y_test.ravel()].shape)
+    vrb =np.c_[X_test.ravel(), Y_test.ravel()]
+    print(np.shape(vrb))
 
     Y_pred = multi_mlp_model.predict(X_test)
     prob = multi_mlp_model.predict_proba(X_test)
