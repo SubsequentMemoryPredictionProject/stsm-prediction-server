@@ -25,9 +25,10 @@ class StsmPredictionModel:
     def load_model(self):
         try:
             self.model = joblib.load('mlp_model.pkl')
-            self.logger.info('Model loaded successfully')
-        except Exception:
-            raise error_handling.LoadModelError('Failed loading saved model')
+            self.logger.info('del loaded successfully')
+        except :
+            #raise error_handling.LoadModelError('Failed loading saved model')
+            self.logger.error('error loading model')
 
     def connect(self):
         try:
