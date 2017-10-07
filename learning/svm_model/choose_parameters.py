@@ -58,7 +58,7 @@ try:
                     # cross validation
                     for i in range(5):
                         X_train, X_test,Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
-                        X_train=scaler.fit(X_train)
+                        X_train=scaler.fit_transform(X_train)
                         X_test=scaler.transform(X_test)
                         multi_svm_model.fit(X_train, Y_train)
                         print('finished model fit')
