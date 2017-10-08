@@ -68,6 +68,6 @@ if __name__ == '__main__':
         raise
     finally:
         print('bye')
-        #stsm_model.disconnect()
+        stsm_model.disconnect()
 
 
