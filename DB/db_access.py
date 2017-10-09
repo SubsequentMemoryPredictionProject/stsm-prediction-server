@@ -73,8 +73,8 @@ def float_arr(string):
     for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
-            #to_array = np.zeros(NUM_FEATURES,np.float)
-            return []
+            to_array = np.zeros(NUM_FEATURES,np.float)
+            return to_array
         # mark the places with missing signals
         if to_array[i] in ['', '.', '-', ' ',',']:
             to_array[i] = np.nan
