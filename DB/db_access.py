@@ -42,10 +42,10 @@ def get_signals(db, user_query='', table='data_set'):
         user_query = 'AND ' + user_query
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query + 'LIMIT 0,20;'
+             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query + ';'
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
-             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query + 'LIMIT 0,20;'
+             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query + ';'
     section_one = get_data(db, query1)
     logger.info('Got section one of data - size: %s' % str(np.shape(section_one)))
     section_two = get_data(db, query2)
