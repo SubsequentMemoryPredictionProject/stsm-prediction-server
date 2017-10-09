@@ -162,7 +162,10 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
 def float_arr_length(string, duration):
     fix = False
     to_array = string.split(',')
-    for i in range(len(to_array)):
+    while len(to_array) < duration:
+        to_array.append(np.nan)
+        fix = True
+    for i in range(duration):
         # ignore missing words
         if 'undefined' == to_array[i]:
             to_array = np.zeros(duration,np.float)
@@ -174,9 +177,7 @@ def float_arr_length(string, duration):
             continue
         to_array[i] = np.float(to_array[i])
     # add place holders for missing signals if array contains < NUM_SAMPLES (duration)
-    while len(to_array) < duration:
-        to_array.append(np.nan)
-        fix = True
+
     if fix:
         to_array = fix_missing_signals(to_array[:duration],duration)
     to_array = np.array(to_array[:duration],dtype=float)
