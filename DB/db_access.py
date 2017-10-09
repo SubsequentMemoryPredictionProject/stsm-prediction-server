@@ -180,4 +180,4 @@ def float_arr_length(string, duration):
     if fix:
         to_array = fix_missing_signals(to_array)
     to_array = np.array(to_array[:duration],dtype=float)
-    return to_array
+    return to_array[:256]
