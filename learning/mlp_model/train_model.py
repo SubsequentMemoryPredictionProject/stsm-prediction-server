@@ -31,7 +31,7 @@ try:
 
     scaler = StandardScaler(copy=False)
     # load data to train & test model
-    X = choose_signals(conn)
+    X = choose_signals(conn,1,256)
     print('finished -  get data')
     Y = get_results(conn)
     print('finished - get results ')
@@ -84,7 +84,7 @@ try:
     file.close()
 
     # save trained model
-    joblib.dump(multi_mlp_model, 'mlp_model.pkl')
+    joblib.dump(multi_mlp_model, 'trained_model.pkl')
 except:
     print(sys.exc_info()[0])
     raise
