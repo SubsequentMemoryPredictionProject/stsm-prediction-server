@@ -132,9 +132,9 @@ def choose_signals(db, elec, duration):
         section = 1
     else:
         section = 2
-    part_1 = 'SELECT signal_elec%s_subelec1 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20 ;'% (elec,section)
-    part_2 = 'SELECT signal_elec%s_subelec2 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20;'% (elec,section)
-    part_3 = 'SELECT signal_elec%s_subelec3 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20 ;'% (elec,section)
+    part_1 = 'SELECT signal_elec%s_subelec1 FROM data_set WHERE EEG_data_section=%s  ;'% (elec,section)
+    part_2 = 'SELECT signal_elec%s_subelec2 FROM data_set WHERE EEG_data_section=%s ;'% (elec,section)
+    part_3 = 'SELECT signal_elec%s_subelec3 FROM data_set WHERE EEG_data_section=%s  ;'% (elec,section)
     subelec_1 = get_data(db, part_1)
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)
