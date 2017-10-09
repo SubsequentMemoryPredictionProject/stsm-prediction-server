@@ -16,7 +16,6 @@ def validate_user_results(request,db):
 
 
 def create_user_query(request):
-    print(request)
     user_id = request['user_id']
     print(user_id)
     query = ' ('
