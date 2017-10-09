@@ -2,14 +2,20 @@
 import pymysql.connections
 from sklearn.preprocessing import Imputer  # for fixing incomplete data
 import numpy as np
-import sys
+import sys, os
+PROJECT_ROOT = os.path.abspath('.')
+sys.path.append(PROJECT_ROOT)
+from logger import Logger
 NUM_FEATURES = 532
 NUM_ELECTRODES = 6
 
 
+logger = Logger().get_logger()
+
+
 # get data from DB
 def get_data(db, query):
-    print("in db access")
+    logger.info('DB access - in get data')
     cursor = db.cursor()
     cursor.execute(query)
     data = cursor.fetchall()
@@ -19,6 +25,7 @@ def get_data(db, query):
 
 # insert data to DB
 def insert_data(db, query):
+    logger.info('DB access - in insert data')
     cursor = db.cursor()
     cursor.execute(query)
     cursor.close()
@@ -27,31 +34,33 @@ def insert_data(db, query):
 
 
 # get eeg signals from DB
-def get_signals(db, user_query='',table='data_set'):
-    print('in get signals')
+def get_signals(db, user_query='', table='data_set'):
+    logger.info('In get signals: using table - %s' % table)
     signals = []
     word = []
-    #print(get_data(db,'SELECT count(*) FROM user_data;'))
     if user_query:
         user_query = 'AND ' + user_query
     query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
              signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query +';'
+             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query + ';'
     query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
-             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query +';'
+             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query + ';'
     section_one = get_data(db, query1)
-    print("got section one")
+    logger.info('Got section one of data - size: %s' % str(np.shape(section_one)))
     section_two = get_data(db, query2)
-    print("got section 2")
-    print(np.shape(section_one))
-    print(np.shape(section_two))
+    logger.info('Got section two of data - size: %s' % str(np.shape(section_two)))
     for i in range(len(section_one)):
-        print("word  = ",i)
+        logger.info("Getting signals for word  = %d " %i)
+        check_missing_part = len(word)
         for j in range(NUM_ELECTRODES):
             word.extend(float_arr(section_one[i][j]))
         for k in range(NUM_ELECTRODES):
             word.extend(float_arr(section_two[i][k]))
+        # ignore missing words / words with missing data_section
+        if len(word) == check_missing_part:
+            logger.info('Missing data section - skipping current word')
+            continue
         signals.append(np.asarray(word, dtype=np.float))
         word = []
     return signals
@@ -64,10 +73,10 @@ def float_arr(string):
     for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
-            to_array = np.zeros(NUM_FEATURES,np.float)
-            return to_array
+            #to_array = np.zeros(NUM_FEATURES,np.float)
+            return []
         # mark the places with missing signals
-        if to_array[i] in ['', '.', '-', ' ']:
+        if to_array[i] in ['', '.', '-', ' ',',']:
             to_array[i] = np.nan
             fix = True
             continue
@@ -83,7 +92,7 @@ def float_arr(string):
 
 # get results from DB
 def get_results(db ,user_query='',table='data_set'):
-    print('in get results')
+    logger.info('In get results: using table - %s' % table)
     results = []
     if table!='untagged_predictions':
         if user_query:
@@ -99,9 +108,9 @@ def get_results(db ,user_query='',table='data_set'):
     print(np.shape(data_set))
     for row in data_set:
         # ignore missing words
-        #if row[1] == 0 or row[4] == 0:
-           # print("no results")
-            #continue
+        if row[1] == 0 or row[4] == 0:
+            print("no results")
+            continue
         results.append(np.array(row, int))
     return results
 
@@ -115,7 +124,7 @@ def fix_missing_signals(electrode):
 
 # functions for choosing parameters (averaged electrode , duration)
 def choose_signals(db, elec, duration):
-    print('in get signals')
+    logger.info('In choose signals')
     signals = []
     word = []
     average_signal =[]
@@ -123,9 +132,9 @@ def choose_signals(db, elec, duration):
         section = 1
     else:
         section = 2
-    part_1 = 'SELECT signal_elec%s_subelec1 FROM data_set WHERE EEG_data_section=%s  ;'% (elec,section)
-    part_2 = 'SELECT signal_elec%s_subelec2 FROM data_set WHERE EEG_data_section=%s ;'% (elec,section)
-    part_3 = 'SELECT signal_elec%s_subelec3 FROM data_set WHERE EEG_data_section=%s ;'% (elec,section)
+    part_1 = 'SELECT signal_elec%s_subelec1 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20 ;'% (elec,section)
+    part_2 = 'SELECT signal_elec%s_subelec2 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20;'% (elec,section)
+    part_3 = 'SELECT signal_elec%s_subelec3 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20 ;'% (elec,section)
     subelec_1 = get_data(db, part_1)
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)
@@ -135,6 +144,7 @@ def choose_signals(db, elec, duration):
         average_signal.append(float_arr_length(subelec_3[i][0],duration))
         average_signal = np.asarray(average_signal)
         word = np.mean(average_signal,axis=0)
+        logger.info('Averaged sub-electrodes for main electrode: %d , sampling %d points' % (elec, duration))
         signals.append(np.asarray(word, dtype=np.float))
         average_signal= []
     return signals
@@ -154,7 +164,7 @@ def float_arr_length(string, duration):
             fix = True
             continue
         to_array[i] = np.float(to_array[i])
-    # add place holders for missing signals if array contains < NUM_FEATURES
+    # add place holders for missing signals if array contains < NUM_SAMPLES (duration)
     while len(to_array) < duration:
         to_array.append(np.nan)
         fix = True

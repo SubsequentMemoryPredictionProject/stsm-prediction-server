@@ -19,6 +19,7 @@ import config as cfg
 
 from DB.db_access import choose_signals
 from DB.db_access import get_results
+from DB.db_access import get_signals
 from model_evaluation.test_model import evaluate_model
 from model_evaluation.test_model import separate_results
 
@@ -31,7 +32,7 @@ try:
 
     scaler = StandardScaler(copy=False)
     # load data to train & test model
-    X = choose_signals(conn, 1, 256)
+    X = get_signals(conn)
     print('finished -  get data')
     Y = get_results(conn)
     print('finished - get results ')
@@ -78,7 +79,7 @@ try:
     writer.writerow(['confusion-matrix (total=%d)'%(len(true_stm))])
     writer.writerow(matrix[0])
     writer.writerow(matrix[1])
-    writer.writrow(['Normalized confusion matrix:'])
+    writer.writerow(['Normalized confusion matrix:'])
     writer.writerow(normalized_matrix[0])
     writer.writerow(normalized_matrix[1])
     file.close()
