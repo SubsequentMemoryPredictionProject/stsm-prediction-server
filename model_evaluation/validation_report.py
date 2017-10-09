@@ -8,8 +8,6 @@ def validate_user_results(request,db):
     query = create_user_query(request)
     true_values = get_results(db, query, 'user_data')
     pred_values = get_results(db, query, 'untagged_predictions')
-    print(true_values)
-    print(pred_values)
     precision_remember, recall_remember, f1_remember,precsion_forget,recall_forget,f1_forget\
         = evaluate_model(true_values,pred_values)
     return model_evaluation_file(precision_remember, recall_remember, f1_remember,precsion_forget,recall_forget,f1_forget)
