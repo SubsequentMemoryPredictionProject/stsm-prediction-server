@@ -116,10 +116,10 @@ def get_results(db ,user_query='',table='data_set'):
 
 
 # fix missing signals from one electrode
-def fix_missing_signals(electrode):
+def fix_missing_signals(electrode,duration):
     imp = Imputer(axis=1, copy=False, missing_values='NaN', strategy='mean', verbose=0)
     imp.fit([electrode])
-    return np.reshape(imp.transform([electrode]), NUM_FEATURES)
+    return np.reshape(imp.transform([electrode]), duration)
 
 
 # functions for choosing parameters - averaged electrode , duration
