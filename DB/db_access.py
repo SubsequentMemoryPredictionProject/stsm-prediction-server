@@ -163,7 +163,7 @@ def float_arr_length(string, duration):
     fix = False
     to_array = string.split(',')
     print(to_array)
-    for i in range(to_array):
+    for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
             to_array = np.zeros(duration,np.float)
