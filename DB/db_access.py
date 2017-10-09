@@ -73,8 +73,8 @@ def float_arr(string):
     for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
-            to_array = np.zeros(NUM_FEATURES,np.float)
-            return to_array
+            #to_array = np.zeros(NUM_FEATURES,np.float)
+            return []
         # mark the places with missing signals
         if to_array[i] in ['', '.', '-', ' ',',']:
             to_array[i] = np.nan
@@ -102,7 +102,7 @@ def get_results(db ,user_query='',table='data_set'):
         user_query = ' WHERE ' + user_query
     print(user_query)
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query
+             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query + 'LIMIT 0,20'
     print(query)
     data_set = get_data(db, query)
     print(np.shape(data_set))
@@ -110,7 +110,7 @@ def get_results(db ,user_query='',table='data_set'):
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
             print("no results")
-            #continue
+            continue
         results.append(np.array(row, int))
     return results
 
@@ -123,10 +123,8 @@ def fix_missing_signals(electrode):
 
 
 # functions for choosing parameters (averaged electrode , duration)
-def choose_signals(db, elec, duration,user_query='', table='data_set'):
+def choose_signals(db, elec, duration):
     logger.info('In choose signals')
-    if user_query:
-        user_query = 'AND ' + user_query
     signals = []
     word = []
     average_signal =[]
@@ -134,15 +132,12 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         section = 1
     else:
         section = 2
-    part_1 = 'SELECT signal_elec%s_subelec1 FROM ' % elec +table + ' WHERE EEG_data_section=%s ' % section  + user_query
-    part_2 = 'SELECT signal_elec%s_subelec2 FROM '% elec + table +' WHERE EEG_data_section=%s '% section + user_query
-    part_3 = 'SELECT signal_elec%s_subelec3 FROM '%elec +table +' WHERE EEG_data_section=%s  '% section + user_query
+    part_1 = 'SELECT signal_elec%s_subelec1 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20 ;'% (elec,section)
+    part_2 = 'SELECT signal_elec%s_subelec2 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20;'% (elec,section)
+    part_3 = 'SELECT signal_elec%s_subelec3 FROM data_set WHERE EEG_data_section=%s LIMIT 0,20 ;'% (elec,section)
     subelec_1 = get_data(db, part_1)
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)
-    print(np.shape(subelec_1))
-    print(np.shape(subelec_2))
-    print(np.shape(subelec_3))
     for i in range(len(subelec_1)):
         average_signal.append(float_arr_length(subelec_1[i][0],duration))
         average_signal.append(float_arr_length(subelec_2[i][0],duration))
