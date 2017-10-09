@@ -51,7 +51,7 @@ try:
     not_remember_recall = 5 * [0]
     not_remember_f1 = 5 * [0]
 
-    for i in range(5):
+    for i in range(10):
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
         X_train = scaler.fit_transform(X_train)
         X_test = scaler.transform(X_test)
