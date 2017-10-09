@@ -17,7 +17,7 @@ PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 import config as cfg
 
-from DB.db_access import get_signals
+from DB.db_access import choose_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
 from model_evaluation.test_model import separate_results
@@ -27,11 +27,11 @@ try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
-    mlp_model = MLPClassifier(verbose=True,hidden_layer_sizes=(100,20),activation='identity')
+    mlp_model = MLPClassifier(verbose=True, hidden_layer_sizes=(100, 20), activation='identity')
 
     scaler = StandardScaler(copy=False)
     # load data to train & test model
-    X = get_signals(conn)
+    X = choose_signals(conn)
     print('finished -  get data')
     Y = get_results(conn)
     print('finished - get results ')
