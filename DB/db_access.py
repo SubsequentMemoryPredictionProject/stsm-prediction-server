@@ -102,7 +102,7 @@ def get_results(db ,user_query='',table='data_set'):
         user_query = ' WHERE ' + user_query
     print(user_query)
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query + 'LIMIT 0,20'
+             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query
     print(query)
     data_set = get_data(db, query)
     print(np.shape(data_set))

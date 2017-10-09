@@ -57,13 +57,13 @@ try:
     print(np.shape(Y_test))
 
     Y_pred = multi_mlp_model.predict(X_test)
-    prob = multi_mlp_model.predict_proba(X_test)
-    prob_stm = prob[0]
+    # prob = multi_mlp_model.predict_proba(X_test)
+    # prob_stm = prob[0]
     pred_stm = separate_results(Y_pred)[0]
     true_stm = separate_results(Y_test)[0]
     matrix = confusion_matrix(true_stm,pred_stm)
     normalized_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
-    print(prob_stm)
+    # print(prob_stm)
     print(pred_stm)
     print(true_stm)
     filename = 'bestModelResultsStm2.csv'
@@ -71,7 +71,7 @@ try:
     writer = csv.writer(file, delimiter=',')
     writer.writerow(pred_stm)
     writer.writerow(true_stm)
-    writer.writerow(prob_stm)
+    # writer.writerow(prob_stm)
     prec,recall,f1,neg_prec,neg_recall,neg_f1 = evaluate_model(Y_test,Y_pred)
     writer.writerow(['Remember - precision,recall,f1:',prec[0],recall[0],f1[0]])
     writer.writerow(['Forget - precision,recall,f1:',neg_prec[0],neg_recall[0],neg_f1[0]])
