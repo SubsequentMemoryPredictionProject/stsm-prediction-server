@@ -44,12 +44,12 @@ try:
     print(np.shape(X))
     print(np.shape(Y))
     average_matrix = []
-    precision = 5 * [0]
-    recall = 5 * [0]
-    f1 = 5 * [0]
-    not_remember_precision = 5 * [0]
-    not_remember_recall = 5 * [0]
-    not_remember_f1 = 5 * [0]
+    precision = 10 * [0]
+    recall = 10 * [0]
+    f1 = 10 * [0]
+    not_remember_precision = 10 * [0]
+    not_remember_recall = 10 * [0]
+    not_remember_f1 = 10 * [0]
 
     for i in range(10):
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
