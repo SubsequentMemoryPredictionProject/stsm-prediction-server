@@ -17,7 +17,7 @@ PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 import config as cfg
 
-from DB.db_access import choose_signals
+from DB.db_access import get_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
 from model_evaluation.test_model import separate_results
@@ -31,7 +31,7 @@ try:
 
     scaler = StandardScaler(copy=False)
     # load data to train & test model
-    X = choose_signals(conn, 1, 256)
+    X = get_signals(conn)
     print('finished -  get data')
     Y = get_results(conn)
     print('finished - get results ')

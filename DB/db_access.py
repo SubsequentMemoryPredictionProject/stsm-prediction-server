@@ -110,7 +110,7 @@ def get_results(db ,user_query='',table='data_set'):
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
             print("no results")
-            continue
+            #continue
         results.append(np.array(row, int))
     return results
 
