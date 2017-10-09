@@ -57,21 +57,25 @@ try:
     print(np.shape(Y_test))
 
     Y_pred = multi_mlp_model.predict(X_test)
-    # prob = multi_mlp_model.predict_proba(X_test)
-    # prob_stm = prob[0]
     pred_stm = separate_results(Y_pred)[0]
     true_stm = separate_results(Y_test)[0]
+    pred_ltm = separate_results(Y_pred)[3]
+    true_ltm = separate_results(Y_test)[3]
     matrix = confusion_matrix(true_stm,pred_stm)
     normalized_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
-    # print(prob_stm)
+    matrix2 = confusion_matrix(true_ltm,pred_ltm)
+    normalized_matrix2 = matrix2 / matrix2.astype(np.float).sum(axis=1, keepdims=True)
     print(pred_stm)
     print(true_stm)
-    filename = 'bestModelResultsStm2.csv'
+    print(pred_ltm)
+    print(true_ltm)
+    filename = 'bestModelResultsStm&Ltm.csv'
     file = open(filename, "w", newline='')
     writer = csv.writer(file, delimiter=',')
     writer.writerow(pred_stm)
     writer.writerow(true_stm)
-    # writer.writerow(prob_stm)
+    writer.writerow(pred_ltm)
+    writer.writerow(true_ltm)
     prec,recall,f1,neg_prec,neg_recall,neg_f1 = evaluate_model(Y_test,Y_pred)
     writer.writerow(['Remember - precision,recall,f1:',prec[0],recall[0],f1[0]])
     writer.writerow(['Forget - precision,recall,f1:',neg_prec[0],neg_recall[0],neg_f1[0]])
@@ -81,6 +85,14 @@ try:
     writer.writerow(['Normalized confusion matrix:'])
     writer.writerow(normalized_matrix[0])
     writer.writerow(normalized_matrix[1])
+    writer.writerow(['Remember - precision,recall,f1:',prec[3],recall[3],f1[3]])
+    writer.writerow(['Forget - precision,recall,f1:',neg_prec[3],neg_recall[3],neg_f1[3]])
+    writer.writerow(['confusion-matrix (total=%d)'%(len(true_ltm))])
+    writer.writerow(matrix2[0])
+    writer.writerow(matrix2[1])
+    writer.writerow(['Normalized confusion matrix:'])
+    writer.writerow(normalized_matrix2[0])
+    writer.writerow(normalized_matrix2[1])
     file.close()
 
     # save trained model

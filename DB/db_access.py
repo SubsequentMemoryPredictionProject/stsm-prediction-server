@@ -138,14 +138,8 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
     part_2 = 'SELECT signal_elec%s_subelec2 FROM ' %elec +table +' WHERE EEG_data_section=%s  '% section +user_query+';'
     part_3 = 'SELECT signal_elec%s_subelec3 FROM ' %elec +table + ' WHERE EEG_data_section=%s '% section+user_query +';'
     subelec_1 = get_data(db, part_1)
-    print(np.shape(subelec_1))
-
     subelec_2 = get_data(db, part_2)
-    print(np.shape(subelec_2))
-
     subelec_3 = get_data(db, part_3)
-    print(np.shape(subelec_3))
-
     for i in range(len(subelec_1)):
         logger.info('Getting signals for word -%d' % (i+1))
         average_signal.append(float_arr_length(subelec_1[i][0], duration))
