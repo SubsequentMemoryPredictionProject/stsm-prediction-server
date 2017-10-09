@@ -47,9 +47,9 @@ def get_signals(db, user_query='', table='data_set'):
              signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
              signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query + ';'
     section_one = get_data(db, query1)
-    logger.info('Got section one of data - size: %s' % str(np.shape(section_one)))
+    #logger.info('Got section one of data - size: %s' % str(np.shape(section_one)))
     section_two = get_data(db, query2)
-    logger.info('Got section two of data - size: %s' % str(np.shape(section_two)))
+    #logger.info('Got section two of data - size: %s' % str(np.shape(section_two)))
     for i in range(len(section_one)):
         logger.info("Getting signals for word  = %d " %i)
         check_missing_part = len(word)
