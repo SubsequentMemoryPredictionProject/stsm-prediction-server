@@ -140,6 +140,9 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
     subelec_1 = get_data(db, part_1)
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)
+    print(np.shape(subelec_1))
+    print(np.shape(subelec_2))
+    print(np.shape(subelec_3))
     for i in range(len(subelec_1)):
         average_signal.append(float_arr_length(subelec_1[i][0],duration))
         average_signal.append(float_arr_length(subelec_2[i][0],duration))
