@@ -48,6 +48,7 @@ class StsmPredictionModel:
             request_signals = prediction_request_signals(request, self.db_conn)
             self.logger.info('Finished loading request eeg signals. size = %s'% str(np.shape(request_signals)))
             self.logger.info('Starting prediction...')
+            print(np.shape(request_signals))
             prediction = self.model.predict(request_signals)
             self.logger.info('Finished prediction')
             predictions_db(prediction,request,self.db_conn)

@@ -162,7 +162,6 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
 def float_arr_length(string, duration):
     fix = False
     to_array = string.split(',')
-    print(to_array)
     for i in range(len(to_array)):
         # ignore missing words
         if 'undefined' == to_array[i]:
