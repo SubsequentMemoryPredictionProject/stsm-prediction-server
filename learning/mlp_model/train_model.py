@@ -32,7 +32,7 @@ try:
 
     scaler = StandardScaler(copy=False)
     # load data to train & test model
-    X = get_signals(conn)
+    X = choose_signals(conn,1,256)
     print('finished -  get data')
     Y = get_results(conn)
     print('finished - get results ')
