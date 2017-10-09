@@ -69,7 +69,7 @@ try:
     print(true_stm)
     print(pred_ltm)
     print(true_ltm)
-    filename = 'bestModelResultsStm&Ltm.csv'
+    filename = 'bestModelResultsStmLtm.csv'
     file = open(filename, "w", newline='')
     writer = csv.writer(file, delimiter=',')
     writer.writerow(pred_stm)
