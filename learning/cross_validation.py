@@ -1,4 +1,5 @@
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
 import sys, csv
 import os
 import numpy as np
@@ -21,6 +22,7 @@ def cross_validation(X, Y, model, k=5):
     recall_neg = k*[NUM_RESULTS*[0]]
     f1 = k*[NUM_RESULTS*[0]]
     f1_neg = k*[NUM_RESULTS*[0]]
+    average_matrix =[]
     for i in range(k):
         # split data to training and testing set
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25,random_state=i)
@@ -38,13 +40,17 @@ def cross_validation(X, Y, model, k=5):
         precision_neg[i] = forget_prec
         recall_neg[i] = forget_recall
         f1_neg[i] = forget_f1
+        matrix_stm = confusion_matrix(Y_test[0], Y_pred[0])
+        normalize_matrix_stm = matrix_stm / matrix_stm.astype(np.float).sum(axis=1, keepdims=True)
+        average_matrix.append(normalize_matrix_stm)
+        matrix_stm = []
     # report model scores
-    cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg)
+    cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,average_matrix)
     return model
 
 
 # calculate cross-validation score & save to file
-def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg):
+def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,matrix=None):
     remember_scores = [precision, recall, f1]
     forget_scores = [precision_neg, recall_neg, f1_neg]
     filename = 'bestModelResults.csv'
@@ -61,5 +67,9 @@ def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg):
         logger.info('Forget - %s score = %s' % (name, np.mean(score, axis=0)))
         writer.writerow(['Forget ' + name + ' score:',])
         writer.writerow(np.mean(score, axis=0))
+    if matrix:
+        logger.info('Normalized confusion matrix - Stm: %s' % str(np.mean(matrix,axis=0)))
+        writer.writerow(['Normalized confusion matrix - Stm:',])
+        writer.writerow(matrix)
     file.close()
     return
