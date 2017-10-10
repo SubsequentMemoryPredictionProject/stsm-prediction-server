@@ -31,11 +31,11 @@ def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity'
     joblib.dump(trained_model, 'trained_model.pkl')
     return
 
-
-try:
-    conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
-                           , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
-    train_and_save(conn,1, 240)
-except:
-    logger.error('Error in training model - %s' % str(sys.exc_info()))
+#
+# try:
+#     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
+#                            , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
+#     train_and_save(conn,1, 240)
+# except:
+#     logger.error('Error in training model - %s' % str(sys.exc_info()))
 
