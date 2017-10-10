@@ -23,7 +23,7 @@ try:
                 for func in activation:
                     logger.info('MLP model - params: electrode - %d, duration - %d, layer_size = %s, activation - %s'
                                 % (elec, dur, str(lyer), func))
-                    train_and_save(conn, electrode, dur, lyer,'identity')
+                    train_and_save(conn, elec, dur, lyer,'identity')
 
 except:
     logger.error('Error - %s ' % str(sys.exc_info()[0]))
