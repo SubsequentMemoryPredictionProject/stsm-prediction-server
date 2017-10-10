@@ -17,12 +17,11 @@ try:
     activation = ['relu', 'tanh', 'identity']
     electrode = [1, 2, 3, 4]
     eeg_duration = [240, 256, 260]
+
     for elec in electrode:
         for dur in eeg_duration:
             for lyer in layer_size:
                 for func in activation:
-                    logger.info('MLP model - params: electrode - %d, duration - %d, layer_size = %s, activation - %s'
-                                % (elec, dur, str(lyer), func))
                     train_and_save(conn, elec, dur, lyer,'identity')
 
 except:

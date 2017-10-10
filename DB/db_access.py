@@ -1,8 +1,7 @@
-#import mysql.connector
-import pymysql.connections
 from sklearn.preprocessing import Imputer  # for fixing incomplete data
 import numpy as np
-import sys, os
+import sys
+import os
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 from logger import Logger
@@ -34,21 +33,18 @@ def insert_data(db, query):
 
 
 # get results from DB
-def get_results(db ,user_query='',table='data_set'):
+def get_results(db, user_query='', table='data_set'):
     logger.info('In get results: using table - %s' % table)
     results = []
-    if table!='untagged_predictions':
+    if table != 'untagged_predictions':
         if user_query:
             user_query = 'AND ' + user_query
         user_query = ' WHERE EEG_data_section=1 ' + user_query
-    else :
+    else:
         user_query = ' WHERE ' + user_query
-    print(user_query)
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
              ltm_confidence_level, ltm_remember_know FROM ' + table + user_query
-    print(query)
     data_set = get_data(db, query)
-    print(np.shape(data_set))
     for row in data_set:
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
@@ -72,14 +68,14 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         user_query = 'AND ' + user_query
     signals = []
     word = []
-    average_signal =[]
-    if elec in [1,2]:
+    average_signal = []
+    if elec in [1, 2]:
         section = 1
     else:
         section = 2
-    part_1 = 'SELECT signal_elec%s_subelec1 FROM ' %elec +table+ ' WHERE EEG_data_section=%s '% section + user_query +';'
-    part_2 = 'SELECT signal_elec%s_subelec2 FROM ' %elec +table +' WHERE EEG_data_section=%s '% section +user_query+';'
-    part_3 = 'SELECT signal_elec%s_subelec3 FROM ' %elec +table + ' WHERE EEG_data_section=%s '% section+user_query +';'
+    part_1 = 'SELECT signal_elec%s_subelec1 FROM ' % elec + table + ' WHERE EEG_data_section=%s ' % section + user_query
+    part_2 = 'SELECT signal_elec%s_subelec2 FROM ' % elec + table + ' WHERE EEG_data_section=%s ' % section + user_query
+    part_3 = 'SELECT signal_elec%s_subelec3 FROM ' % elec + table + ' WHERE EEG_data_section=%s ' % section + user_query
     subelec_1 = get_data(db, part_1)
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)
@@ -114,7 +110,6 @@ def float_arr_length(string, duration):
             continue
         to_array[i] = np.float(to_array[i])
     # add place holders for missing signals if array contains < NUM_SAMPLES (duration)
-
     if fix:
         to_array = fix_missing_signals(to_array[:duration],duration)
     to_array = np.array(to_array[:duration],dtype=float)
