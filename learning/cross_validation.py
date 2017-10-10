@@ -51,6 +51,7 @@ def cross_validation(X, Y, model, k=5):
 
 # calculate cross-validation score & save to file
 def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,matrix=None):
+    print(matrix)
     remember_scores = [precision, recall, f1]
     forget_scores = [precision_neg, recall_neg, f1_neg]
     filename = 'bestModelResults.csv'
