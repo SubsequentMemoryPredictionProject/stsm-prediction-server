@@ -76,7 +76,7 @@ def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,stm
         writer.writerow(['Normalized confusion matrix - Stm:',])
         writer.writerow(stm)
     if ltm:
-        logger.info('Normalized confusion matrix - Ltm: %s' % str(np.mean(stm, axis=0)))
+        logger.info('Normalized confusion matrix - Ltm: %s' % str(np.mean(ltm, axis=0)))
         writer.writerow(['Normalized confusion matrix - Ltm:', ])
         writer.writerow(ltm)
     file.close()
