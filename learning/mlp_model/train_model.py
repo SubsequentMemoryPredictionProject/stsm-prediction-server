@@ -19,7 +19,7 @@ logger = Logger().get_logger()
 
 
 def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity'):
-    mlp_model = MLPClassifier(verbose=True, hidden_layer_sizes=layer, activation=activation)
+    mlp_model = MLPClassifier(verbose=False, hidden_layer_sizes=layer, activation=activation)
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     # load data from db to train & test model
     X = choose_signals(db,electrode,duration)

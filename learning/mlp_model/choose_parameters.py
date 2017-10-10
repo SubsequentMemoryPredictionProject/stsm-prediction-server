@@ -7,7 +7,7 @@ import config as cfg
 from learning.mlp_model.train_model import train_and_save
 from logger import Logger
 
-logger = Logger.get_logger()
+logger = Logger().get_logger()
 try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                      , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
