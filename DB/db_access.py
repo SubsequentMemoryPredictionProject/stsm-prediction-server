@@ -102,7 +102,7 @@ def get_results(db ,user_query='',table='data_set'):
         user_query = ' WHERE ' + user_query
     print(user_query)
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query
+             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query +'LIMIT 0,20'
     print(query)
     data_set = get_data(db, query)
     print(np.shape(data_set))
@@ -134,9 +134,9 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         section = 1
     else:
         section = 2
-    part_1 = 'SELECT signal_elec%s_subelec1 FROM ' %elec +table+ ' WHERE EEG_data_section=%s '% section + user_query +';'
-    part_2 = 'SELECT signal_elec%s_subelec2 FROM ' %elec +table +' WHERE EEG_data_section=%s  '% section +user_query+';'
-    part_3 = 'SELECT signal_elec%s_subelec3 FROM ' %elec +table + ' WHERE EEG_data_section=%s '% section+user_query +';'
+    part_1 = 'SELECT signal_elec%s_subelec1 FROM ' %elec +table+ ' WHERE EEG_data_section=%s LIMIT 0,20 '% section + user_query +';'
+    part_2 = 'SELECT signal_elec%s_subelec2 FROM ' %elec +table +' WHERE EEG_data_section=%s LIMIT 0,20 '% section +user_query+';'
+    part_3 = 'SELECT signal_elec%s_subelec3 FROM ' %elec +table + ' WHERE EEG_data_section=%s LIMIT 0,20'% section+user_query +';'
     subelec_1 = get_data(db, part_1)
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)
