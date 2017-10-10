@@ -33,63 +33,6 @@ def insert_data(db, query):
     return
 
 
-# get eeg signals from DB
-def get_signals(db, user_query='', table='data_set'):
-    logger.info('In get signals: using table - %s' % table)
-    signals = []
-    word = []
-    if user_query:
-        user_query = 'AND ' + user_query
-    query1 = 'SELECT signal_elec1_subelec1, signal_elec1_subelec2, \
-             signal_elec1_subelec3, signal_elec2_subelec1, signal_elec2_subelec2, \
-             signal_elec2_subelec3 FROM ' + table + ' WHERE EEG_data_section=1 ' + user_query + ';'
-    query2 = 'SELECT signal_elec3_subelec1, signal_elec3_subelec2, \
-             signal_elec3_subelec3, signal_elec4_subelec1, signal_elec4_subelec2, \
-             signal_elec4_subelec3 FROM ' + table + ' WHERE EEG_data_section=2 ' + user_query + ';'
-    section_one = get_data(db, query1)
-    #logger.info('Got section one of data - size: %s' % str(np.shape(section_one)))
-    section_two = get_data(db, query2)
-    #logger.info('Got section two of data - size: %s' % str(np.shape(section_two)))
-    for i in range(len(section_one)):
-        logger.info("Getting signals for word  = %d " %i)
-        check_missing_part = len(word)
-        for j in range(NUM_ELECTRODES):
-            word.extend(float_arr(section_one[i][j]))
-        for k in range(NUM_ELECTRODES):
-            word.extend(float_arr(section_two[i][k]))
-        # ignore missing words / words with missing data_section
-        if len(word) == check_missing_part:
-            logger.info('Missing data section - skipping current word')
-            continue
-        signals.append(np.asarray(word, dtype=np.float))
-        word = []
-    return signals
-
-
-# create float array from str data  + fix missing signals
-def float_arr(string):
-    fix = False
-    to_array = string.split(',')
-    for i in range(len(to_array)):
-        # ignore missing words
-        if 'undefined' == to_array[i]:
-            to_array = np.zeros(NUM_FEATURES,np.float)
-            return to_array
-        # mark the places with missing signals
-        if to_array[i] in ['', '.', '-', ' ',',']:
-            to_array[i] = np.nan
-            fix = True
-            continue
-        to_array[i] = np.float(to_array[i])
-    # add place holders for missing signals if array contains < NUM_FEATURES
-    while len(to_array) < NUM_FEATURES:
-        to_array.append(np.nan)
-        fix = True
-    if fix:
-        to_array = fix_missing_signals(to_array)
-    return to_array
-
-
 # get results from DB
 def get_results(db ,user_query='',table='data_set'):
     logger.info('In get results: using table - %s' % table)
@@ -102,7 +45,7 @@ def get_results(db ,user_query='',table='data_set'):
         user_query = ' WHERE ' + user_query
     print(user_query)
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
-             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query
+             ltm_confidence_level, ltm_remember_know FROM ' + table + user_query + 'LIMIT 0,20'
     print(query)
     data_set = get_data(db, query)
     print(np.shape(data_set))
@@ -134,9 +77,9 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         section = 1
     else:
         section = 2
-    part_1 = 'SELECT signal_elec%s_subelec1 FROM ' %elec +table+ ' WHERE EEG_data_section=%s  '% section + user_query +';'
-    part_2 = 'SELECT signal_elec%s_subelec2 FROM ' %elec +table +' WHERE EEG_data_section=%s  '% section +user_query+';'
-    part_3 = 'SELECT signal_elec%s_subelec3 FROM ' %elec +table + ' WHERE EEG_data_section=%s '% section+user_query +';'
+    part_1 = 'SELECT signal_elec%s_subelec1 FROM ' %elec +table+ ' WHERE EEG_data_section=%s LIMIT 0,20 '% section + user_query +';'
+    part_2 = 'SELECT signal_elec%s_subelec2 FROM ' %elec +table +' WHERE EEG_data_section=%s LIMIT 0,20 '% section +user_query+';'
+    part_3 = 'SELECT signal_elec%s_subelec3 FROM ' %elec +table + ' WHERE EEG_data_section=%s LIMIT 0,20'% section+user_query +';'
     subelec_1 = get_data(db, part_1)
     subelec_2 = get_data(db, part_2)
     subelec_3 = get_data(db, part_3)

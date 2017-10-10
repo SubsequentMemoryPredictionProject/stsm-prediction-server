@@ -10,6 +10,7 @@ PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 from logger import Logger
 from model_evaluation.test_model import evaluate_model
+from model_evaluation.test_model import separate_results
 
 logger = Logger().get_logger()
 
@@ -23,6 +24,7 @@ def cross_validation(X, Y, model, k=5):
     f1 = k*[NUM_RESULTS*[0]]
     f1_neg = k*[NUM_RESULTS*[0]]
     average_matrix =[]
+    average_matrix2 =[]
     for i in range(k):
         # split data to training and testing set
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25,random_state=i)
@@ -40,18 +42,19 @@ def cross_validation(X, Y, model, k=5):
         precision_neg[i] = forget_prec
         recall_neg[i] = forget_recall
         f1_neg[i] = forget_f1
-        matrix_stm = confusion_matrix(Y_test[0], Y_pred[0])
+        matrix_stm = confusion_matrix(separate_results(Y_test)[0],separate_results(Y_pred)[0])
         normalize_matrix_stm = matrix_stm / matrix_stm.astype(np.float).sum(axis=1, keepdims=True)
         average_matrix.append(normalize_matrix_stm)
-        matrix_stm = []
+        matrix_ltm = confusion_matrix(separate_results(Y_test)[3], separate_results(Y_pred)[3])
+        normalize_matrix_ltm = matrix_ltm / matrix_ltm.astype(np.float).sum(axis=1, keepdims=True)
+        average_matrix2.append(normalize_matrix_ltm)
     # report model scores
-    cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,average_matrix)
+    cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,average_matrix,average_matrix2)
     return model
 
 
 # calculate cross-validation score & save to file
-def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,matrix=None):
-    print(matrix)
+def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,stm=None,ltm=None):
     remember_scores = [precision, recall, f1]
     forget_scores = [precision_neg, recall_neg, f1_neg]
     filename = 'bestModelResults.csv'
@@ -68,9 +71,13 @@ def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,mat
         logger.info('Forget - %s score = %s' % (name, np.mean(score, axis=0)))
         writer.writerow(['Forget ' + name + ' score:',])
         writer.writerow(np.mean(score, axis=0))
-    if matrix:
-        logger.info('Normalized confusion matrix - Stm: %s' % str(np.mean(matrix,axis=0)))
+    if stm:
+        logger.info('Normalized confusion matrix - Stm: %s' % str(np.mean(stm,axis=0)))
         writer.writerow(['Normalized confusion matrix - Stm:',])
-        writer.writerow(matrix)
+        writer.writerow(stm)
+    if ltm:
+        logger.info('Normalized confusion matrix - Ltm: %s' % str(np.mean(stm, axis=0)))
+        writer.writerow(['Normalized confusion matrix - Ltm:', ])
+        writer.writerow(ltm)
     file.close()
     return
