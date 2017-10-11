@@ -64,6 +64,7 @@ def fix_missing_signals(electrode,duration):
 # functions for choosing parameters - averaged electrode , duration
 def choose_signals(db, elec, duration,user_query='', table='data_set'):
     logger.info('In choose signals')
+    logger.info('Averaging sub-electrodes for main electrode: %d , sampling %d points' % (elec, duration))
     if user_query:
         user_query = 'AND ' + user_query
     signals = []
@@ -86,7 +87,6 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         average_signal.append(float_arr_length(subelec_3[i][0], duration))
         average_signal = np.asarray(average_signal)
         word = np.mean(average_signal,axis=0)
-        logger.info('Averaged sub-electrodes for main electrode: %d , sampling %d points' % (elec, duration))
         signals.append(np.asarray(word, dtype=np.float))
         average_signal = []
     return signals
