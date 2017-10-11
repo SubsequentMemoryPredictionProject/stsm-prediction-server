@@ -12,7 +12,6 @@ from logger import Logger
 from DB.db_access import choose_signals
 from DB.db_access import get_results
 from learning.cross_validation import cross_validation
-NUM_RESULTS = 6
 
 
 logger = Logger().get_logger()
@@ -37,7 +36,7 @@ def main():
         conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                                , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
         logger.info('Start model training')
-        train_and_save(conn,1, 240)
+        train_and_save(conn,1, 256)
     except:
         logger.error('Error in training model - %s' % str(sys.exc_info()))
 

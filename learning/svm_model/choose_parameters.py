@@ -1,17 +1,13 @@
 from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 import pymysql.connections
-import sys, os
+import sys
+import os
 import numpy as np
 from sklearn import metrics
 from sklearn.metrics import confusion_matrix
 from sklearn import svm
 from sklearn.preprocessing import StandardScaler
-
-
-
-
-
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 import config as cfg
@@ -19,9 +15,6 @@ from DB.db_access import choose_signals
 from DB.db_access import get_results
 from model_evaluation.test_model import separate_results
 from logger import Logger
-
-
-
 
 try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
