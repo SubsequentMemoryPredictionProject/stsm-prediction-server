@@ -3,7 +3,7 @@ from sklearn.metrics import confusion_matrix
 import sys, csv
 import os
 import numpy as np
-from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import RobustScaler
 NUM_RESULTS = 6
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -16,7 +16,7 @@ logger = Logger().get_logger()
 
 
 def cross_validation(X, Y, model, k=5):
-    scaler = Normalizer(copy=False)
+    scaler = RobustScaler(copy=False)
     precision = k*[NUM_RESULTS*[0]]
     precision_neg = k*[NUM_RESULTS*[0]]
     recall = k*[NUM_RESULTS*[0]]
