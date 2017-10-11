@@ -27,7 +27,7 @@ def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity'
     logger.info('Finished getting results for model training. size -%s' % str(np.shape(Y)))
     trained_model = cross_validation(X, Y, multi_mlp_model)
     # save trained model
-    joblib.dump(trained_model, 'trained_model.pkl')
+    joblib.dump(trained_model, 'trained_model2.pkl')
     return
 
 
@@ -36,7 +36,7 @@ def main():
         conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                                , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
         logger.info('Start model training')
-        train_and_save(conn, 4, 256)
+        train_and_save(conn, 1, 256)
     except:
         logger.error('Error in training model - %s' % str(sys.exc_info()))
 
