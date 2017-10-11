@@ -28,7 +28,9 @@ def cross_validation(X, Y, model, k=5):
     for i in range(k):
         # split data to training and testing set
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25,random_state=i)
+        print('before scaling ', X_train[0])
         X_train = scaler.fit_transform(X_train)
+        print('after scaling ', X_train[0])
         X_test = scaler.transform(X_test)
         model.fit(X_train,Y_train)
         logger.info('Cross-validation fold - %d :finished model fit' % (i+1))
