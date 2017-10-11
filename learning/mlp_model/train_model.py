@@ -17,7 +17,7 @@ from learning.cross_validation import cross_validation
 logger = Logger().get_logger()
 
 
-def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity'):
+def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity',cross_val=5):
     mlp_model = MLPClassifier(verbose=False, hidden_layer_sizes=layer, activation=activation)
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     # load data from db to train & test model
@@ -25,7 +25,7 @@ def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity'
     logger.info('Finished getting signals for model training. size -%s' % str(np.shape(X)))
     Y = get_results(db)
     logger.info('Finished getting results for model training. size -%s' % str(np.shape(Y)))
-    trained_model = cross_validation(X, Y, multi_mlp_model)
+    trained_model = cross_validation(X, Y, multi_mlp_model, cross_val)
     # save trained model
     joblib.dump(trained_model, 'trained_model2.pkl')
     return
@@ -36,7 +36,7 @@ def main():
         conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                                , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
         logger.info('Start model training')
-        train_and_save(conn, 1, 256)
+        train_and_save(conn, 1, 256, cross_val=7)
     except:
         logger.error('Error in training model - %s' % str(sys.exc_info()))
 
