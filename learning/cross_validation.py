@@ -3,7 +3,7 @@ from sklearn.metrics import confusion_matrix
 import sys, csv
 import os
 import numpy as np
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import Normalizer
 NUM_RESULTS = 6
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -16,7 +16,7 @@ logger = Logger().get_logger()
 
 
 def cross_validation(X, Y, model, k=5):
-    scaler = RobustScaler(copy=False)
+    scaler = Normalizer(copy=False)
     precision = k*[NUM_RESULTS*[0]]
     precision_neg = k*[NUM_RESULTS*[0]]
     recall = k*[NUM_RESULTS*[0]]
@@ -28,10 +28,10 @@ def cross_validation(X, Y, model, k=5):
     for i in range(k):
         # split data to training and testing set
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25,random_state=i)
-        # print('before scaling ', X_train[0])
-        # X_train = scaler.fit_transform(X_train)
-        # print('after scaling ', X_train[0])
-        # X_test = scaler.transform(X_test)
+        print('before scaling ', X_train[0])
+        X_train = scaler.fit_transform(X_train)
+        print('after scaling ', X_train[0])
+        X_test = scaler.transform(X_test)
         model.fit(X_train,Y_train)
         logger.info('Cross-validation fold - %d :finished model fit' % (i+1))
         Y_pred = model.predict(X_test)
