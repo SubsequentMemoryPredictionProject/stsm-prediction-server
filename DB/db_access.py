@@ -100,6 +100,7 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         average_signal = np.asarray(average_signal)
         if not(np.size(average_signal[0]) and np.size(average_signal[1]) and np.size(average_signal[2])):
             print('signals skip word')
+            average_signal = []
             continue
         word = np.mean(average_signal,axis=0)
         signals.append(np.asarray(word, dtype=np.float))
