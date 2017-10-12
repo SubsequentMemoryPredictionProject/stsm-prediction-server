@@ -10,7 +10,7 @@ from logger import Logger
 logger = Logger().get_logger()
 try:
     conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
-                     , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
+                           , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
 
     # parameters to try:
     layer_size = [(100, 20), (100, 80, 20)]

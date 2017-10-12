@@ -4,9 +4,9 @@ import sys
 import os
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
+from stsm_prediction_model.error_handling import ModelError
+from stsm_prediction_model.error_handling import DBError
 from logger import Logger
-NUM_FEATURES = 532
-NUM_ELECTRODES = 6
 
 
 logger = Logger().get_logger()
@@ -15,20 +15,26 @@ logger = Logger().get_logger()
 # get data from DB
 def get_data(db, query):
     logger.info('DB access - in get data')
-    cursor = db.cursor()
-    cursor.execute(query)
-    data = cursor.fetchall()
-    cursor.close()
+    try:
+        cursor = db.cursor()
+        cursor.execute(query)
+        data = cursor.fetchall()
+        cursor.close()
+    except:
+        raise DBError('DB query failed', 1010, sys.exc_info()[1])
     return data
 
 
 # insert data to DB
 def insert_data(db, query):
     logger.info('DB access - in insert data')
-    cursor = db.cursor()
-    cursor.execute(query)
-    cursor.close()
-    db.commit()
+    try:
+        cursor = db.cursor()
+        cursor.execute(query)
+        cursor.close()
+        db.commit()
+    except:
+        raise DBError('Failed inserting data to DB', 1011, sys.exc_info()[1])
     return
 
 
@@ -44,12 +50,15 @@ def get_results(db, user_query='', table='data_set'):
         user_query = ' WHERE ' + user_query
     query = 'SELECT stm, stm_confidence_level, stm_remember_know, ltm, \
              ltm_confidence_level, ltm_remember_know FROM ' + table + user_query
-    data_set = get_data(db, query)
+    try:
+        data_set = get_data(db, query)
+    except DBError as err:
+        raise DBError('Failed getting results - %s' % err.msg, 1011, sys.exc_info()[1])
     for row in data_set:
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
             print("no results")
-            #continue
+            # continue
         results.append(np.array(row, int))
     return results
 
@@ -111,6 +120,10 @@ def float_arr_length(string, duration):
         to_array[i] = np.float(to_array[i])
     # add place holders for missing signals if array contains < NUM_SAMPLES (duration)
     if fix:
-        to_array = fix_missing_signals(to_array[:duration],duration)
-    to_array = np.array(to_array[:duration],dtype=float)
+        try:
+            to_array = fix_missing_signals(to_array[:duration],duration)
+            logger.info('Fixed missing signals')
+        except:
+            raise ModelError('Failed fixing missing signals', 1012, sys.exc_info()[1])
+    to_array = np.array(to_array[:duration], dtype=float)
     return to_array

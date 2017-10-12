@@ -1,11 +1,22 @@
+import sys
 from DB.db_access import insert_data
 from DB.db_access import get_data
 from model_evaluation.validation_report import create_user_query
+from logger import Logger
+from stsm_prediction_model.error_handling import UserRequestError
+from stsm_prediction_model.error_handling import DBError
+
+
+logger = Logger().get_logger()
 
 
 # insert predictions to DB
 def predictions_db(predictions, request, db):
-    delete_predictions_db(db, request)
+    try:
+        logger.info('Deleting duplicate predictions')
+        delete_predictions_db(db, request)
+    except (DBError, UserRequestError):
+        raise
     user_id = request['user_id']
     insert_result = 0
     subjects_words = request['subjects_and_word_ids']
@@ -20,17 +31,29 @@ def predictions_db(predictions, request, db):
             query = query + request_details + result_details
             insert_result += 1
     query = query[:-1] + ';'
-    insert_data(db, query)
+    try:
+        insert_data(db, query)
+    except:
+        raise DBError('Failed updating predictions to db', 1006, sys.exc_info()[1])
     return
 
 
 def delete_predictions_db(db, request):
-    #print(get_data(db,'SELECT count(*) FROM untagged_predictions'))
-    user_query = create_user_query(request)
+    logger.info('Prediction table size before delete - %d'
+                % (get_data(db, 'SELECT count(row_count()) FROM untagged_predictions')))
+    try:
+        user_query = create_user_query(request)
+    except:
+        raise UserRequestError('Error in user request - creating SQL query', 1004, sys.exc_info()[1])
     query = 'DELETE FROM untagged_predictions WHERE'
     query = query + user_query
-    insert_data(db, query)
-    #print(get_data(db, 'SELECT count(*) FROM untagged_predictions'))
+    try:
+        insert_data(db, query)
+        logger.info('Duplicate predictions deleted successfully.'
+                    ' prediction table size - %d' % (get_data(db,
+                                                              'SELECT count(row_count()) FROM untagged_predictions')))
+    except:
+        raise DBError('Failed deleting duplicate predictions from untagged prediction table', 1006, sys.exc_info()[1])
     return
 
 

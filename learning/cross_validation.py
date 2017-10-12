@@ -11,45 +11,46 @@ sys.path.append(PROJECT_ROOT)
 from logger import Logger
 from model_evaluation.test_model import evaluate_model
 from model_evaluation.test_model import separate_results
+from stsm_prediction_model.error_handling import ModelError
+
 
 logger = Logger().get_logger()
 
 
-def cross_validation(X, Y, model, k=5):
+def cross_validation(X, Y, model, k=5, scaler=False):
     scaler = Normalizer(copy=False)
-    precision = k*[NUM_RESULTS*[0]]
-    precision_neg = k*[NUM_RESULTS*[0]]
-    recall = k*[NUM_RESULTS*[0]]
-    recall_neg = k*[NUM_RESULTS*[0]]
-    f1 = k*[NUM_RESULTS*[0]]
-    f1_neg = k*[NUM_RESULTS*[0]]
+    precision, precision_neg = k*[NUM_RESULTS*[0]], k*[NUM_RESULTS*[0]]
+    recall, recall_neg = k*[NUM_RESULTS*[0]], k*[NUM_RESULTS*[0]]
+    f1, f1_neg = k*[NUM_RESULTS*[0]], k*[NUM_RESULTS*[0]]
     average_matrix = []
     average_matrix2 = []
     for i in range(k):
         # split data to training and testing set
-        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25,random_state=i)
-        # print('before scaling ', X_train[0])
-        # X_train = scaler.fit_transform(X_train)
-        # print('after scaling ', X_train[0])
-        # X_test = scaler.transform(X_test)
-        model.fit(X_train,Y_train)
-        logger.info('Cross-validation fold - %d :finished model fit' % (i+1))
-        Y_pred = model.predict(X_test)
-        logger.info('Cross-validation fold - %d :finished prediction of test samples' % (i+1))
-        remember_prec, remember_recall, remember_f1,\
-            forget_prec, forget_recall, forget_f1 = evaluate_model(Y_test, Y_pred)
-        precision[i] = remember_prec
-        recall[i] = remember_recall
-        f1[i] = remember_f1
-        precision_neg[i] = forget_prec
-        recall_neg[i] = forget_recall
-        f1_neg[i] = forget_f1
-        matrix_stm = confusion_matrix(separate_results(Y_test)[0],separate_results(Y_pred)[0])
-        normalize_matrix_stm = matrix_stm / matrix_stm.astype(np.float).sum(axis=1, keepdims=True)
-        average_matrix.append(normalize_matrix_stm)
-        matrix_ltm = confusion_matrix(separate_results(Y_test)[3], separate_results(Y_pred)[3])
-        normalize_matrix_ltm = matrix_ltm / matrix_ltm.astype(np.float).sum(axis=1, keepdims=True)
-        average_matrix2.append(normalize_matrix_ltm)
+        try:
+            X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
+            if scaler:
+                X_train = scaler.fit_transform(X_train)
+                X_test = scaler.transform(X_test)
+            model.fit(X_train,Y_train)
+            logger.info('Cross-validation fold - %d :finished model fit' % (i+1))
+            Y_pred = model.predict(X_test)
+            logger.info('Cross-validation fold - %d :finished prediction of test samples' % (i+1))
+            remember_prec, remember_recall, remember_f1,\
+                forget_prec, forget_recall, forget_f1 = evaluate_model(Y_test, Y_pred)
+            precision[i] = remember_prec
+            recall[i] = remember_recall
+            f1[i] = remember_f1
+            precision_neg[i] = forget_prec
+            recall_neg[i] = forget_recall
+            f1_neg[i] = forget_f1
+            matrix_stm = confusion_matrix(separate_results(Y_test)[0],separate_results(Y_pred)[0])
+            normalize_matrix_stm = matrix_stm / matrix_stm.astype(np.float).sum(axis=1, keepdims=True)
+            average_matrix.append(normalize_matrix_stm)
+            matrix_ltm = confusion_matrix(separate_results(Y_test)[3], separate_results(Y_pred)[3])
+            normalize_matrix_ltm = matrix_ltm / matrix_ltm.astype(np.float).sum(axis=1, keepdims=True)
+            average_matrix2.append(normalize_matrix_ltm)
+        except:
+            raise ModelError('Error in ')
     # report model scores
     cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,average_matrix,average_matrix2)
     return model
