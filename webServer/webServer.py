@@ -71,5 +71,3 @@ if __name__ == '__main__':
             stsm_model.disconnect()
         except DBError as e:
             logger.error(e.msg)
-
-

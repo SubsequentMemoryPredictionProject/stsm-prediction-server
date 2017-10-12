@@ -53,7 +53,7 @@ def get_results(db, user_query='', table='data_set'):
     try:
         data_set = get_data(db, query)
     except DBError as err:
-        raise DBError('Failed getting results - %s' % err.msg, 1011, sys.exc_info()[1])
+        raise DBError('Failed getting results - %s' % err.msg, err.code, sys.exc_info()[1])
     for row in data_set:
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
@@ -86,9 +86,12 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
     part_1 = 'SELECT signal_elec%s_subelec1 FROM ' % elec + table + ' WHERE EEG_data_section=%s ' % section + user_query
     part_2 = 'SELECT signal_elec%s_subelec2 FROM ' % elec + table + ' WHERE EEG_data_section=%s ' % section + user_query
     part_3 = 'SELECT signal_elec%s_subelec3 FROM ' % elec + table + ' WHERE EEG_data_section=%s ' % section + user_query
-    subelec_1 = get_data(db, part_1)
-    subelec_2 = get_data(db, part_2)
-    subelec_3 = get_data(db, part_3)
+    try:
+        subelec_1 = get_data(db, part_1)
+        subelec_2 = get_data(db, part_2)
+        subelec_3 = get_data(db, part_3)
+    except DBError as err:
+        raise DBError('Failed getting eeg signals - %s' % err.msg, err.code, sys.exc_info()[1])
     for i in range(len(subelec_1)):
         #logger.info('Getting signals for word -%d' % (i+1))
         average_signal.append(float_arr_length(subelec_1[i][0], duration))

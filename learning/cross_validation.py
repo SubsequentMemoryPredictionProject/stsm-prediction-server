@@ -17,7 +17,7 @@ from stsm_prediction_model.error_handling import ModelError
 logger = Logger().get_logger()
 
 
-def cross_validation(X, Y, model, k=5, Scaler=False):
+def cross_validation(X, Y, model, k=5, scale=False):
     scaler = Normalizer(copy=False)
     precision, precision_neg = k*[NUM_RESULTS*[0]], k*[NUM_RESULTS*[0]]
     recall, recall_neg = k*[NUM_RESULTS*[0]], k*[NUM_RESULTS*[0]]
@@ -28,7 +28,7 @@ def cross_validation(X, Y, model, k=5, Scaler=False):
         # split data to training and testing set
         try:
             X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
-            if Scaler:
+            if scale:
                 X_train = scaler.fit_transform(X_train)
                 X_test = scaler.transform(X_test)
             model.fit(X_train,Y_train)
