@@ -19,13 +19,15 @@ logger = Logger().get_logger()
 
 def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity',cross_val=5,learning_rate='constant'):
     mlp_model = MLPClassifier(verbose=False, hidden_layer_sizes=layer, activation=activation,
-                              solver='sgd', learning_rate=learning_rate)
+                              solver='sgd', learning_rate=learning_rate,max_iter=400)
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     # load data from db to train & test model
     X = choose_signals(db,electrode,duration)
     logger.info('Finished getting signals for model training. size -%s' % str(np.shape(X)))
     Y = get_results(db)
     logger.info('Finished getting results for model training. size -%s' % str(np.shape(Y)))
+    logger.info('Results using params: electrode =%d, duration = %d, layers = %s, activation = %s, learning_rate = %s' %
+                (electrode, duration, str(layer), activation, learning_rate))
     trained_model = cross_validation(X, Y, multi_mlp_model, cross_val)
     # save trained model
     joblib.dump(trained_model, 'trained_model2.pkl')
