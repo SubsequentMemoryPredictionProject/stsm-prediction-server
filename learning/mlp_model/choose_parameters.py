@@ -24,7 +24,7 @@ try:
             for lyer in layer_size:
                 for func in activation:
                     for rate in learning_rate:
-                        train_and_save(conn, elec, dur, lyer, func, rate)
+                        train_and_save(conn, elec, dur, lyer, func, learning_rate=rate)
 
 except:
     logger.error('Error - %s ' % str(sys.exc_info()[0]))
