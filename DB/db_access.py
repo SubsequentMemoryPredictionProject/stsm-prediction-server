@@ -58,7 +58,7 @@ def get_results(db, user_query='', table='data_set'):
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
             print("no results")
-            # continue
+            continue
         results.append(np.array(row, int))
     return results
 
@@ -94,17 +94,20 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         raise DBError('Failed getting eeg signals - %s' % err.msg, err.code, sys.exc_info()[1])
     for i in range(len(subelec_1)):
         #logger.info('Getting signals for word -%d' % (i+1))
-        average_signal.append(float_arr_length(subelec_1[i][0], duration))
-        average_signal.append(float_arr_length(subelec_2[i][0], duration))
-        average_signal.append(float_arr_length(subelec_3[i][0], duration))
+        average_signal.append(float_arr(subelec_1[i][0], duration))
+        average_signal.append(float_arr(subelec_2[i][0], duration))
+        average_signal.append(float_arr(subelec_3[i][0], duration))
         average_signal = np.asarray(average_signal)
+        if not(np.size(average_signal[0]) and np.size(average_signal[1]) and np.size(average_signal[2])):
+            print('signals skip word')
+            continue
         word = np.mean(average_signal,axis=0)
         signals.append(np.asarray(word, dtype=np.float))
         average_signal = []
     return signals
 
 
-def float_arr_length(string, duration):
+def float_arr(string, duration):
     fix = False
     to_array = string.split(',')
     while len(to_array) < duration:
@@ -113,8 +116,9 @@ def float_arr_length(string, duration):
     for i in range(duration):
         # ignore missing words
         if 'undefined' == to_array[i]:
-            to_array = np.zeros(duration,np.float)
-            return to_array
+            print('missing signals')
+            #to_array = np.zeros(duration, np.float)
+            return []
         # mark the places with missing signals
         if to_array[i] in ['', '.', '-', ' ']:
             to_array[i] = np.nan

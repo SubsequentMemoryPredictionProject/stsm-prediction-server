@@ -2,6 +2,7 @@ import sys
 import csv
 from DB.db_access import get_results
 from model_evaluation.test_model import evaluate_model
+from prediction.load_request import create_user_query
 from stsm_prediction_model.error_handling import ModelError
 from stsm_prediction_model.error_handling import DBError
 from stsm_prediction_model.error_handling import UserRequestError
@@ -32,19 +33,6 @@ def validate_user_results(request, db):
         raise
     return model_evaluation_file(precision_remember, recall_remember, f1_remember,precision_forget, recall_forget,
                                  f1_forget)
-
-
-def create_user_query(request):
-    user_id = request['user_id']
-    query = ' ('
-    subjects_words = request['subjects_and_word_ids']
-    for i in subjects_words:
-        for j in range(len(subjects_words[i])):
-            request_details = "(user_id=" + str(user_id) + " AND subject_id=" + str(i) \
-                                 + " AND word_id=" + str(subjects_words[i][j]) + ') OR'
-            query = query + request_details
-    query = query[:-2] + ');'
-    return query
 
 
 # create csv file with results scores

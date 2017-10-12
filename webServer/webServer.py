@@ -15,8 +15,6 @@ app = Flask(__name__)
 stsm_model = None
 
 
-# TODO comments
-
 @app.route('/stsm/algorithms/predict', methods=['POST'])
 def predict():
     try:
@@ -39,8 +37,8 @@ def validate():
         return json.dumps({'msg': ' %s ' % err.msg, 'success': False})
 
 
-def signal_handler(signal, frame):
-    logger.info('Received signal - %s' % signal)
+def signal_handler(signum, frame):
+    logger.info('Received signal - %d' % signum)
     stsm_model.disconnect()
     sys.exit(0)
 

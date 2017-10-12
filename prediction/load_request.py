@@ -9,7 +9,6 @@ import numpy as np
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 from DB.db_access import choose_signals
-from model_evaluation.validation_report import create_user_query
 from stsm_prediction_model.error_handling import DBError
 from stsm_prediction_model.error_handling import UserRequestError
 from logger import Logger
@@ -27,9 +26,22 @@ def prediction_request_signals(request, conn):
     try:
         request_signals = choose_signals(conn, 1, 256, prediction_details, 'user_data')
         logger.info('Successful in getting eeg signals for user request')
-    except:
-        raise DBError('Failed getting eeg signals for user request', 1003, sys.exc_info()[1])
+    except DBError as err:
+        raise DBError('Failed getting eeg signals for user request - %s' % err.msg, err.code, sys.exc_info()[1])
     return request_signals
+
+
+def create_user_query(request):
+    user_id = request['user_id']
+    query = ' ('
+    subjects_words = request['subjects_and_word_ids']
+    for i in subjects_words:
+        for j in range(len(subjects_words[i])):
+            request_details = "(user_id=" + str(user_id) + " AND subject_id=" + str(i) \
+                                 + " AND word_id=" + str(subjects_words[i][j]) + ') OR'
+            query = query + request_details
+    query = query[:-2] + ');'
+    return query
 
 
 

@@ -33,8 +33,8 @@ def predictions_db(predictions, request, db):
     query = query[:-1] + ';'
     try:
         insert_data(db, query)
-    except:
-        raise DBError('Failed updating predictions to db', 1006, sys.exc_info()[1])
+    except DBError as err:
+        raise DBError('Failed updating predictions to db - %s' % err.msg, err.code, sys.exc_info()[1])
     return
 
 
@@ -52,8 +52,9 @@ def delete_predictions_db(db, request):
         logger.info('Duplicate predictions deleted successfully.'
                     ' prediction table size - %d' % (get_data(db,
                                                               'SELECT count(row_count()) FROM untagged_predictions')))
-    except:
-        raise DBError('Failed deleting duplicate predictions from untagged prediction table', 1006, sys.exc_info()[1])
+    except DBError as err:
+        raise DBError('Failed deleting duplicate predictions from '
+                      'untagged prediction table - %s' % err.msg, err.code, sys.exc_info()[1])
     return
 
 
