@@ -36,7 +36,7 @@ def validate():
         return send_from_directory(PROJECT_ROOT, validation_file, as_attachment=True)
     except (DBError, ModelError, UserRequestError) as err:
         logger.error('Validation process failed -  %s, %s' % (err.msg, err.error))
-        return json.dumps({'msg': 'Validation process failed  - %s, %s' % (err.msg, err.error), 'success': False})
+        return json.dumps({'msg': ' %s ' % err.msg, 'success': False})
 
 
 def signal_handler(signal, frame):
