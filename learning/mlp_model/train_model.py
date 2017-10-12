@@ -23,7 +23,7 @@ def train_and_save(db, electrode, duration, layer=(100, 20), activation='identit
                    learning_rate='constant'):
     try:
         mlp_model = MLPClassifier(verbose=True, hidden_layer_sizes=layer, activation=activation,
-                                  solver='sgd', learning_rate=learning_rate,max_iter=400)
+                                  solver='sgd', learning_rate=learning_rate,max_iter=600)
         multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     except:
         raise ModelError('Error in creating MLP model', 1014, sys.exc_info()[1])
