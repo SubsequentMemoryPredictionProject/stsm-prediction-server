@@ -17,8 +17,9 @@ from learning.cross_validation import cross_validation
 logger = Logger().get_logger()
 
 
-def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity',cross_val=5):
-    mlp_model = MLPClassifier(verbose=False, hidden_layer_sizes=layer, activation=activation)
+def train_and_save(db, electrode, duration,layer=(100, 20),activation='identity',cross_val=5,learning_rate='constant'):
+    mlp_model = MLPClassifier(verbose=False, hidden_layer_sizes=layer, activation=activation,
+                              solver='sgd', learning_rate=learning_rate)
     multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     # load data from db to train & test model
     X = choose_signals(db,electrode,duration)

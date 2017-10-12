@@ -17,12 +17,14 @@ try:
     activation = ['relu', 'tanh', 'identity']
     electrode = [1, 2, 3, 4]
     eeg_duration = [240, 256, 260]
+    learning_rate = ['constant', 'invscaling', 'adaptive']
 
     for elec in electrode:
         for dur in eeg_duration:
             for lyer in layer_size:
                 for func in activation:
-                    train_and_save(conn, elec, dur, lyer,'identity')
+                    for rate in learning_rate:
+                        train_and_save(conn, elec, dur, lyer, func, rate)
 
 except:
     logger.error('Error - %s ' % str(sys.exc_info()[0]))
