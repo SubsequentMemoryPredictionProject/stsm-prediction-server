@@ -40,7 +40,7 @@ def predictions_db(predictions, request, db):
 
 def delete_predictions_db(db, request):
     logger.info('Prediction table size before delete - %d'
-                % (get_data(db, 'SELECT count(row_count()) FROM untagged_predictions')))
+                % get_data(db, 'SELECT count(row_count()) FROM untagged_predictions'))
     try:
         user_query = create_user_query(request)
     except:
@@ -50,8 +50,8 @@ def delete_predictions_db(db, request):
     try:
         insert_data(db, query)
         logger.info('Duplicate predictions deleted successfully.'
-                    ' prediction table size - %d' % (get_data(db,
-                                                              'SELECT count(row_count()) FROM untagged_predictions')))
+                    ' prediction table size - %d' % get_data(db,
+                                                              'SELECT count(row_count()) FROM untagged_predictions'))
     except DBError as err:
         raise DBError('Failed deleting duplicate predictions from '
                       'untagged prediction table - %s' % err.msg, err.code, sys.exc_info()[1])
