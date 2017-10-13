@@ -1,4 +1,5 @@
 from sklearn import metrics
+import numpy as np
 import sys
 import os
 NUM_RESULTS = 6
@@ -38,6 +39,7 @@ def evaluate_model(y_true, y_pred):
 def separate_results(results):
     print(results)
     results_metrics = [[]*len(results) for i in range(NUM_RESULTS)]
+    print(np.shape(results_metrics))
     for row in results:
         for res in range(NUM_RESULTS):
             results_metrics[res].append(row[res])
