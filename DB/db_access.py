@@ -57,7 +57,7 @@ def get_results(db, user_query='', table='data_set'):
     for row in data_set:
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
-            logger.log("Missing results - skip word")
+            logger.info("Missing results - skip word")
             continue
         results.append(np.array(row, int))
     return results
