@@ -52,12 +52,13 @@ def cross_validation(X, Y, model, k=5, scale=False):
         except:
             raise ModelError('Error in ')
     # report model scores
-    cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,average_matrix,average_matrix2)
+    # cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg, average_matrix, average_matrix2)
+    d_prime(Y_test, Y_pred, X_test, model)
     return model
 
 
 # calculate cross-validation score & save to file
-def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,stm=None,ltm=None):
+def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg, stm=None, ltm=None):
     remember_scores = [precision, recall, f1]
     forget_scores = [precision_neg, recall_neg, f1_neg]
     filename = 'bestModelResults.csv'
@@ -68,14 +69,14 @@ def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,stm
     names = ['precision', 'recall', 'f1']
     for name, score in zip(names, remember_scores):
         logger.info('Remember - %s score = %s' % (name, np.mean(score, axis=0)))
-        writer.writerow(['Remember ' + name + ' score:',])
+        writer.writerow(['Remember ' + name + ' score:', ])
         writer.writerow(np.mean(score, axis=0))
     for name, score in zip(names, forget_scores):
         logger.info('Forget - %s score = %s' % (name, np.mean(score, axis=0)))
-        writer.writerow(['Forget ' + name + ' score:',])
+        writer.writerow(['Forget ' + name + ' score:', ])
         writer.writerow(np.mean(score, axis=0))
     if stm:
-        logger.info('Normalized confusion matrix - Stm: %s' % str(np.mean(stm,axis=0)))
+        logger.info('Normalized confusion matrix - Stm: %s' % str(np.mean(stm, axis=0)))
         writer.writerow(['Normalized confusion matrix - Stm:',])
         writer.writerow(stm)
     if ltm:
@@ -84,3 +85,33 @@ def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg,stm
         writer.writerow(ltm)
     file.close()
     return
+
+
+def d_prime(y_true, y_pred,x_test, model):
+    true_separate = separate_results(y_true)
+    pred_separate = separate_results(y_pred)
+    filename = 'resultsForDPrime.csv'
+    file = open(filename, "w", newline='')
+    writer = csv.writer(file, delimiter=',')
+    true_vals = ['True -Stm:', 'True - Stm confidence:', 'True - Stm Remember/Know:',
+                 'True - Ltm:', 'True - Ltm confidence:', 'True - Ltm Remember/Know:']
+    pred_vals = ['Pred - Stm:', 'Pred - Stm confidence:', 'Pred - Stm Remember/Know:',
+                 'Pred - Ltm:', 'Pred - Ltm confidence:', 'Pred - Ltm Remember/Know:']
+    for val, res in zip(true_vals, true_separate):
+        writer.writerow([val,])
+        writer.writerow(res)
+    for val, res in zip(pred_vals, pred_separate):
+        writer.writerow([val,])
+        writer.writerow(res)
+    proba_vals = ['Stm:', 'Stm confidence:', 'Stm Remember/Know:', 'Ltm:', 'Ltm confidence:', 'Ltm Remember/Know:']
+    probability = model.predict_proba(x_test)
+    writer.writerow(['Predict probability', ])
+    for val, prob in zip(proba_vals, probability):
+        print(val)
+        print(prob)
+        writer.writerow([val, ])
+        writer.writerow(prob)
+    file.close()
+    return
+
+

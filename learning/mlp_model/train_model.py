@@ -51,9 +51,9 @@ def main():
         conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
                                , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
         logger.info('Start model training')
-        train_and_save(conn, 1, 256,cross_val=1, learning_rate='invscaling')
+        train_and_save(conn, 1, 256, cross_val=1, learning_rate='invscaling')
     except:
-        logger.error('Error in training model - %s' % str(sys.exc_info()))
+        logger.error('Error in training model - %s' % str(sys.exc_info()[1]))
 
 
 if __name__ == '__main__':

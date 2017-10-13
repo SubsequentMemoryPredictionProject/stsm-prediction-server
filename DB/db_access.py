@@ -57,7 +57,7 @@ def get_results(db, user_query='', table='data_set'):
     for row in data_set:
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
-            print("no results")
+            logger.log("Missing results - skip word")
             continue
         results.append(np.array(row, int))
     return results
@@ -98,8 +98,9 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         average_signal.append(float_arr(subelec_2[i][0], duration))
         average_signal.append(float_arr(subelec_3[i][0], duration))
         average_signal = np.asarray(average_signal)
+        # ignore missing words
         if not(np.size(average_signal[0]) and np.size(average_signal[1]) and np.size(average_signal[2])):
-            print('signals skip word')
+            logger.log('Missing signals -  skip word')
             average_signal = []
             continue
         word = np.mean(average_signal,axis=0)
@@ -117,8 +118,6 @@ def float_arr(string, duration):
     for i in range(duration):
         # ignore missing words
         if 'undefined' == to_array[i]:
-            print('missing signals')
-            #to_array = np.zeros(duration, np.float)
             return []
         # mark the places with missing signals
         if to_array[i] in ['', '.', '-', ' ']:
