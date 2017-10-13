@@ -112,3 +112,24 @@ def d_prime(y_true, y_pred,x_test, model):
     return
 
 
+def confusion_matrix(y_true, y_pred):
+    filename = 'ConfusionMatrix.csv'
+    matrix_stm = confusion_matrix(separate_results(y_true)[0], separate_results(y_pred)[0])
+    normalize_matrix_stm = matrix_stm / matrix_stm.astype(np.float).sum(axis=1, keepdims=True)
+    matrix_ltm = confusion_matrix(separate_results(y_true)[3], separate_results(y_pred)[3])
+    normalize_matrix_ltm = matrix_ltm / matrix_ltm.astype(np.float).sum(axis=1, keepdims=True)
+    file = open(filename, "w", newline='')
+    writer = csv.writer(file, delimiter=',')
+    writer.writerow(['Confusion matrix - Stm (total =%d):' % len(y_true), ])
+    writer.writerow(matrix_stm)
+    writer.writerow(['Normalized confusion matrix - Stm:', ])
+    writer.writerow(normalize_matrix_stm)
+    writer.writerow(['Confusion matrix - Ltm (total =%d):' % len(y_true), ])
+    writer.writerow(matrix_ltm)
+    writer.writerow(['Normalized confusion matrix - Ltm:', ])
+    writer.writerow(normalize_matrix_ltm)
+    file.close()
+    return
+
+
+

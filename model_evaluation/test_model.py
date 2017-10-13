@@ -7,7 +7,6 @@ sys.path.append(PROJECT_ROOT)
 from stsm_prediction_model.error_handling import ModelError
 
 
-
 def evaluate_model(y_true, y_pred):
     precision_score_forget, precision_score_remember = NUM_RESULTS*[0], NUM_RESULTS*[0]
     recall_score_forget, recall_score_remember = NUM_RESULTS*[0], NUM_RESULTS*[0]

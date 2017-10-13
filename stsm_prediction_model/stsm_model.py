@@ -74,7 +74,7 @@ class StsmPredictionModel:
     def validate(self, request):
         self.logger.info("in Stsm Model validate:")
         try:
-            validation_file_name = validate_user_results(request, self.db_conn)
+            validation_file_name = validate_user_results(request, self.db_conn, self.model)
             self.logger.info('Finished validation - results file created')
         except (ModelError, DBError, UserRequestError):
             raise
