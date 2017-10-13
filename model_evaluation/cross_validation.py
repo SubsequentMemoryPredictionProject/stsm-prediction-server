@@ -42,7 +42,7 @@ def cross_validation(X, Y, model, k=5, scale=False):
         precision_neg[i] = forget_prec
         recall_neg[i] = forget_recall
         f1_neg[i] = forget_f1
-        matrix_stm = confusion_matrix(separate_results(Y_test)[0],separate_results(Y_pred)[0])
+        matrix_stm = confusion_matrix(separate_results(Y_test)[0], separate_results(Y_pred)[0])
         normalize_matrix_stm = matrix_stm / matrix_stm.astype(np.float).sum(axis=1, keepdims=True)
         average_matrix.append(normalize_matrix_stm)
         matrix_ltm = confusion_matrix(separate_results(Y_test)[3], separate_results(Y_pred)[3])

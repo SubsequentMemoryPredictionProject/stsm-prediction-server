@@ -29,7 +29,7 @@ class StsmPredictionModel:
 
     def load_model(self):
         try:
-            self.model =joblib.load('C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\\trained_model2.pkl')
+            self.model = joblib.load('C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\\trained_model2.pkl')
             self.logger.info('model loaded successfully')
             return
         except:
@@ -75,6 +75,7 @@ class StsmPredictionModel:
         self.logger.info("in Stsm Model validate:")
         try:
             validation_file_name = validate_user_results(request, self.db_conn)
+            request_signals = prediction_request_signals(request, self.db_conn)
             self.logger.info('Finished validation - results file created')
         except (ModelError, DBError, UserRequestError):
             raise

@@ -1,6 +1,6 @@
 from sklearn import metrics
 from sklearn.externals import joblib
-e
+
 import numpy as np
 import pymysql.connections
 import sys
@@ -10,7 +10,7 @@ PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 from stsm_prediction_model.error_handling import ModelError
 
-from model_evaluation.cross_validation import d_prim
+from model_evaluation.cross_validation import d_prime
 import config as cfg
 from logger import Logger
 from DB.db_access import choose_signals
