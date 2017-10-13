@@ -40,7 +40,7 @@ def predictions_db(predictions, request, db):
 
 def delete_predictions_db(db, request):
     logger.info('Prediction table size before delete - %d'
-                % get_data(db, 'SELECT count(row_count()) FROM untagged_predictions'))
+                %int(get_data(db, 'SELECT count(row_count()) FROM untagged_predictions')))
     try:
         user_query = create_user_query(request)
     except:
