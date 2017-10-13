@@ -36,6 +36,7 @@ def evaluate_model(y_true, y_pred):
 
 
 def separate_results(results):
+    print(results)
     results_metrics = [[]*len(results) for i in range(NUM_RESULTS)]
     for row in results:
         for res in range(NUM_RESULTS):
