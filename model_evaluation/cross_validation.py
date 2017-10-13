@@ -111,8 +111,8 @@ def d_prime(y_true, y_pred,x_test, model):
 
 
 def confusion_matrix(y_true, y_pred):
-    print(np.shape(y_pred))
-    print(np.shape(y_true))
+    print('true size = ',np.shape(y_pred))
+    print(' pred size = ',np.shape(y_true))
     separate_true = separate_results(y_true)
     separate_pred = separate_results(y_pred)
     filename = 'ConfusionMatrix.csv'
