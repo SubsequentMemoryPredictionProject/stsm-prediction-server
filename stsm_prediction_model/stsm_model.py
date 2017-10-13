@@ -14,6 +14,8 @@ from model_evaluation.validation_report import validate_user_results
 from stsm_prediction_model.error_handling import ModelError
 from stsm_prediction_model.error_handling import DBError
 from stsm_prediction_model.error_handling import UserRequestError
+from model_evaluation.cross_validation import d_prime
+
 
 from logger import Logger
 #C:\\Users\\user\PycharmProjects\stsm-prediction-server\learning\mlp_model\

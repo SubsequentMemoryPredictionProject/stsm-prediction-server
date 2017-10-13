@@ -49,7 +49,7 @@ def cross_validation(X, Y, model, k=5, scale=False):
         normalize_matrix_ltm = matrix_ltm / matrix_ltm.astype(np.float).sum(axis=1, keepdims=True)
         average_matrix2.append(normalize_matrix_ltm)
     # report model scores
-    # cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg, average_matrix, average_matrix2)
+    cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg, average_matrix, average_matrix2)
     d_prime(Y_test, Y_pred, X_test, model)
     return model
 

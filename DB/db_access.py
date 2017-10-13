@@ -71,7 +71,7 @@ def fix_missing_signals(electrode,duration):
 
 
 # functions for choosing parameters - averaged electrode , duration
-def choose_signals(db, elec, duration,user_query='', table='data_set'):
+def choose_signals(db, elec, duration, user_query='', table='data_set'):
     logger.info('In choose signals')
     logger.info('Averaging sub-electrodes for main electrode: %d , sampling %d points' % (elec, duration))
     if user_query:

@@ -1,17 +1,19 @@
+import os
+import sys
+
+import numpy as np
+import pymysql.connections
 from sklearn.externals import joblib
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.neural_network import MLPClassifier
-import pymysql.connections
-import sys
-import os
-import numpy as np
+
 PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 import config as cfg
 from logger import Logger
 from DB.db_access import choose_signals
 from DB.db_access import get_results
-from learning.cross_validation import cross_validation
+from model_evaluation.cross_validation import cross_validation
 from stsm_prediction_model.error_handling import ModelError
 from stsm_prediction_model.error_handling import DBError
 
