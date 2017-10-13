@@ -113,6 +113,8 @@ def d_prime(y_true, y_pred,x_test, model):
 
 
 def confusion_matrix(y_true, y_pred):
+    print(np.shape(y_pred))
+    print(np.shape(y_true))
     filename = 'ConfusionMatrix.csv'
     matrix_stm = confusion_matrix(separate_results(y_true)[0], separate_results(y_pred)[0])
     normalize_matrix_stm = matrix_stm / matrix_stm.astype(np.float).sum(axis=1, keepdims=True)
