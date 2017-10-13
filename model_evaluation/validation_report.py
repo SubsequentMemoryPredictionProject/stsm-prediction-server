@@ -8,7 +8,7 @@ from stsm_prediction_model.error_handling import DBError
 from stsm_prediction_model.error_handling import UserRequestError
 from prediction.load_request import prediction_request_signals
 from model_evaluation.cross_validation import d_prime
-from model_evaluation.cross_validation import confusion_matrix
+from model_evaluation.cross_validation import confusion_matrix_file
 
 from logger import Logger
 import numpy as np
@@ -37,7 +37,7 @@ def validate_user_results(request, db, model):
     except ModelError:
         raise
     d_prime(true_values, pred_values, request_signals, model)
-    confusion_matrix(true_values, pred_values)
+    confusion_matrix_file(true_values, pred_values)
     return model_evaluation_file(precision_remember, recall_remember, f1_remember, precision_forget, recall_forget,
                                  f1_forget)
 

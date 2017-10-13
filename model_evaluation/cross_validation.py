@@ -110,7 +110,7 @@ def d_prime(y_true, y_pred,x_test, model):
     return
 
 
-def confusion_matrix(y_true, y_pred):
+def confusion_matrix_file(y_true, y_pred):
     print('true size = ',np.shape(y_pred))
     print(' pred size = ',np.shape(y_true))
     separate_true = separate_results(y_true)
