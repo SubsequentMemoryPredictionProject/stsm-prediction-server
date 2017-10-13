@@ -56,7 +56,6 @@ def get_results(db, user_query='', table='data_set'):
         raise DBError('Failed getting results - %s' % err.msg, err.code, sys.exc_info()[1])
     for row in data_set:
         # ignore missing words
-        print(row)
         if row[1] == 0 or row[4] == 0:
             logger.info("Missing results - skip word")
             continue

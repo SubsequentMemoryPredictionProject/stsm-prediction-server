@@ -104,8 +104,6 @@ def d_prime(y_true, y_pred,x_test, model):
     probability = model.predict_proba(x_test)
     writer.writerow(['Predict probability', ])
     for val, prob in zip(proba_vals, probability):
-        print(val)
-        print(prob)
         writer.writerow([val, ])
         writer.writerow(prob)
     file.close()
