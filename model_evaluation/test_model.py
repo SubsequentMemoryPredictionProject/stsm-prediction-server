@@ -1,8 +1,4 @@
 from sklearn import metrics
-from sklearn.externals import joblib
-
-import numpy as np
-import pymysql.connections
 import sys
 import os
 NUM_RESULTS = 6
@@ -10,11 +6,6 @@ PROJECT_ROOT = os.path.abspath('.')
 sys.path.append(PROJECT_ROOT)
 from stsm_prediction_model.error_handling import ModelError
 
-from model_evaluation.cross_validation import d_prime
-import config as cfg
-from logger import Logger
-from DB.db_access import choose_signals
-from DB.db_access import get_results
 
 
 def evaluate_model(y_true, y_pred):
@@ -52,15 +43,3 @@ def separate_results(results):
             results_metrics[res].append(row[res])
     return results_metrics
 
-
-def main():
-    conn = pymysql.connect(host=cfg.mysql['host'], passwd=cfg.mysql['password']
-                           , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
-    model = joblib.load('trained_model.pkl')
-    X = choose_signals(conn, 1, 256)
-    Y = get_results(conn)
-    prediction = model.predict(X)
-    d_prime(Y, prediction, X, model)
-
-if __name__ == '__main__':
-    main()

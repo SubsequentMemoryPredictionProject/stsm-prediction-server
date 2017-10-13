@@ -6,6 +6,8 @@ from prediction.load_request import create_user_query
 from stsm_prediction_model.error_handling import ModelError
 from stsm_prediction_model.error_handling import DBError
 from stsm_prediction_model.error_handling import UserRequestError
+from prediction.load_request import prediction_request_signals
+from model_evaluation.cross_validation import d_prime
 from logger import Logger
 import numpy as np
 
@@ -18,6 +20,7 @@ def validate_user_results(request, db):
     except:
         raise UserRequestError('Error in user request - failed to create SQL query', 1004, sys.exc_info()[1])
     try:
+        request_signals = prediction_request_signals(request, self.db_conn)
         true_values = get_results(db, query, 'user_data')
         logger.info('Finished getting user results. size - %s' % str(np.shape(true_values)))
         pred_values = get_results(db, query, 'untagged_predictions')
@@ -31,6 +34,7 @@ def validate_user_results(request, db):
             = evaluate_model(true_values, pred_values)
     except ModelError:
         raise
+
     return model_evaluation_file(precision_remember, recall_remember, f1_remember,precision_forget, recall_forget,
                                  f1_forget)
 
