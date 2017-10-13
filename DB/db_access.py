@@ -100,7 +100,7 @@ def choose_signals(db, elec, duration,user_query='', table='data_set'):
         average_signal = np.asarray(average_signal)
         # ignore missing words
         if not(np.size(average_signal[0]) and np.size(average_signal[1]) and np.size(average_signal[2])):
-            logger.log('Missing signals -  skip word')
+            logger.info('Missing signals -  skip word')
             average_signal = []
             continue
         word = np.mean(average_signal,axis=0)
