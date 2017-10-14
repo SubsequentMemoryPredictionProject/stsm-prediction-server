@@ -84,7 +84,7 @@ def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg, st
     return
 
 
-def d_prime(y_true, y_pred,x_test, model):
+def d_prime(y_true, y_pred, x_test, model):
     true_separate = separate_results(y_true)
     pred_separate = separate_results(y_pred)
     filename = 'resultsForDPrime.csv'

@@ -31,6 +31,9 @@ class StsmPredictionModel:
         try:
             self.model = joblib.load('trained_model.pkl')
             self.logger.info('model loaded successfully')
+            print(self.model.estimators_)
+            for est in self.model.estimators_:
+                print(est.classes_)
             return
         except:
             raise ModelError('Failed loading saved model', 1000, str(sys.exc_info()[1]))
