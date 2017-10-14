@@ -1,6 +1,5 @@
 import os
 import sys
-
 import numpy as np
 import pymysql.connections
 from sklearn.externals import joblib
