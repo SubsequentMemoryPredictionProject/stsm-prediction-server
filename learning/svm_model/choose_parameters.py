@@ -13,7 +13,8 @@ sys.path.append(PROJECT_ROOT)
 import config as cfg
 from DB.db_access import choose_signals
 from DB.db_access import get_results
-from model_evaluation.test_model import separate_results
+from learning.svm_model.train_model import train_and_save
+
 from logger import Logger
 
 try:
@@ -43,41 +44,11 @@ try:
         for dur in eeg_duration:
             X = choose_signals(conn, elec, dur)
             for c in C:
-                svm_model = svm.LinearSVC(C=c, verbose=True)
-                multi_svm_model = MultiOutputClassifier(svm_model, n_jobs=1)
-                print(np.shape(X))
-                print(np.shape(Y))
-                # cross validation
-                for i in range(5):
-                    X_train, X_test,Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=i)
-                    X_train=scaler.fit_transform(X_train)
-                    X_test=scaler.transform(X_test)
-                    multi_svm_model.fit(X_train, Y_train)
-                    print('finished model fit')
-                    y_pred = separate_results(multi_svm_model.predict(X_test))[0]
-                    y_true = separate_results(Y_test)[0]
-                    precision[i] = metrics.precision_score(y_true,y_pred)
-                    recall[i] = metrics.recall_score(y_true,y_pred)
-                    f1[i] = metrics.f1_score(y_true,y_pred)
-                    not_remember_precision[i] = metrics.precision_score(y_true, y_pred, pos_label=0)
-                    not_remember_recall[i] = metrics.recall_score(y_true, y_pred, pos_label=0)
-                    not_remember_f1[i] = metrics.f1_score(y_true,y_pred,pos_label=0)
-                    matrix = confusion_matrix(y_true, y_pred)
-                    normalize_matrix = matrix / matrix.astype(np.float).sum(axis=1, keepdims=True)
-                    average_matrix.append(normalize_matrix)
-                    matrix =[]
-                logger.info("svm.LinearSVC params: elctrode - %d, duration = %d, C = %s" % (elec, dur, c))
-                logger.info("precision = %f"%(np.mean(precision)))
-                logger.info("recll = %f"%(np.mean(recall)))
-                logger.info("f1 = %f" % (np.mean(f1)))
-                logger.info("negative lable precision = %f" % (np.mean(not_remember_precision)))
-                logger.info("negative lable recll = %f" % (np.mean(not_remember_recall)))
-                logger.info("negative lable f1 = %f" % (np.mean(not_remember_f1)))
-                logger.info("confusion matrix =")
-                logger.info(np.mean(average_matrix,axis=0))
-                average_matrix =[]
+                for kernel in kernels:
+                    train_and_save(conn, elec, dur, kernel, c)
+
 except:
-    print(sys.exc_info()[0])
+    logger.error('Error - %s ' % str(sys.exc_info()[0]))
     raise
 finally:
     conn.close()

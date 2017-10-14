@@ -31,7 +31,7 @@ def evaluate_model(y_true, y_pred):
             f1_score_forget[i] = metrics.f1_score(separate_real_results[i], separate_predictions[i],pos_label=0)
             f1_score_remember[i] = metrics.f1_score(separate_real_results[i], separate_predictions[i])
     except:
-        raise ModelError('Error in model evaluation', 1008, sys.exc_info()[1])
+        raise ModelError('Error in model evaluation - precision/recall/f1', 4003, str(sys.exc_info()))
     return precision_score_remember, recall_score_remember, f1_score_remember, precision_score_forget,\
         recall_score_forget, f1_score_forget
 

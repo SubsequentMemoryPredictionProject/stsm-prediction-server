@@ -29,7 +29,7 @@ def train_and_save(db, electrode, duration,ker='rbf',penalty=1.0):
     logger.info('Finished getting results for model training. size -%s' % str(np.shape(Y)))
     trained_model = cross_validation(X, Y, multi_mlp_model)
     # save trained model
-    joblib.dump(trained_model, 'trained_model2.pkl')
+    joblib.dump(trained_model, 'trained_svm.pkl')
     return
 
 

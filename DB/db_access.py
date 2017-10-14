@@ -21,7 +21,7 @@ def get_data(db, query):
         data = cursor.fetchall()
         cursor.close()
     except:
-        raise DBError('DB query failed', 1010, sys.exc_info()[1])
+        raise DBError('DB query failed', 5002, str(sys.exc_info()))
     return data
 
 
@@ -34,7 +34,7 @@ def insert_data(db, query):
         cursor.close()
         db.commit()
     except:
-        raise DBError('Failed inserting data to DB', 1011, sys.exc_info()[1])
+        raise DBError('DB query failed', 5002, str(sys.exc_info()))
     return
 
 
@@ -53,7 +53,7 @@ def get_results(db, user_query='', table='data_set'):
     try:
         data_set = get_data(db, query)
     except DBError as err:
-        raise DBError('Failed getting results - %s' % err.msg, err.code, sys.exc_info()[1])
+        raise DBError('Failed getting results - %s' % err.msg, err.code, str(sys.exc_info()))
     for row in data_set:
         # ignore missing words
         if row[1] == 0 or row[4] == 0:
@@ -91,9 +91,9 @@ def choose_signals(db, elec, duration, user_query='', table='data_set'):
         subelec_2 = get_data(db, part_2)
         subelec_3 = get_data(db, part_3)
     except DBError as err:
-        raise DBError('Failed getting eeg signals - %s' % err.msg, err.code, sys.exc_info()[1])
+        raise DBError('Failed getting eeg signals - %s' % err.msg, err.code, str(sys.exc_info()))
     for i in range(len(subelec_1)):
-        #logger.info('Getting signals for word -%d' % (i+1))
+        logger.info('Getting signals for word -%d' % (i+1))
         average_signal.append(float_arr(subelec_1[i][0], duration))
         average_signal.append(float_arr(subelec_2[i][0], duration))
         average_signal.append(float_arr(subelec_3[i][0], duration))
@@ -112,6 +112,7 @@ def choose_signals(db, elec, duration, user_query='', table='data_set'):
 def float_arr(string, duration):
     fix = False
     to_array = string.split(',')
+    # add place holders for missing signals if array contains < NUM_SAMPLES (duration)
     while len(to_array) < duration:
         to_array.append(np.nan)
         fix = True
@@ -125,12 +126,11 @@ def float_arr(string, duration):
             fix = True
             continue
         to_array[i] = np.float(to_array[i])
-    # add place holders for missing signals if array contains < NUM_SAMPLES (duration)
     if fix:
         try:
             to_array = fix_missing_signals(to_array[:duration],duration)
             logger.info('Fixed missing signals')
         except:
-            raise ModelError('Failed fixing missing signals', 1012, sys.exc_info()[1])
+            raise ModelError('Failed fixing missing signals', 4002, str(sys.exc_info()))
     to_array = np.array(to_array[:duration], dtype=float)
     return to_array

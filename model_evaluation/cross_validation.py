@@ -3,7 +3,7 @@ from sklearn.metrics import confusion_matrix
 import sys, csv
 import os
 import numpy as np
-from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import MinMaxScaler
 NUM_RESULTS = 6
 
 PROJECT_ROOT = os.path.abspath('.')
@@ -11,14 +11,14 @@ sys.path.append(PROJECT_ROOT)
 from logger import Logger
 from model_evaluation.test_model import evaluate_model
 from model_evaluation.test_model import separate_results
-from stsm_prediction_model.error_handling import ModelError
+from model_evaluation.results_files import d_prime
 
 
 logger = Logger().get_logger()
 
 
 def cross_validation(X, Y, model, k=5, scale=False):
-    scaler = Normalizer(copy=False)
+    scaler = MinMaxScaler(copy=False)
     precision, precision_neg = k*[NUM_RESULTS*[0]], k*[NUM_RESULTS*[0]]
     recall, recall_neg = k*[NUM_RESULTS*[0]], k*[NUM_RESULTS*[0]]
     f1, f1_neg = k*[NUM_RESULTS*[0]], k*[NUM_RESULTS*[0]]
@@ -82,56 +82,3 @@ def cross_val_score(precision, recall, f1, precision_neg, recall_neg, f1_neg, st
         writer.writerow(ltm)
     file.close()
     return
-
-
-def d_prime(y_true, y_pred, x_test, model):
-    true_separate = separate_results(y_true)
-    pred_separate = separate_results(y_pred)
-    filename = 'resultsForDPrime.csv'
-    file = open(filename, "w", newline='')
-    writer = csv.writer(file, delimiter=',')
-    true_vals = ['True -Stm:', 'True - Stm confidence:', 'True - Stm Remember/Know:',
-                 'True - Ltm:', 'True - Ltm confidence:', 'True - Ltm Remember/Know:']
-    pred_vals = ['Pred - Stm:', 'Pred - Stm confidence:', 'Pred - Stm Remember/Know:',
-                 'Pred - Ltm:', 'Pred - Ltm confidence:', 'Pred - Ltm Remember/Know:']
-    for val, res in zip(true_vals, true_separate):
-        writer.writerow([val,])
-        writer.writerow(res)
-    for val, res in zip(pred_vals, pred_separate):
-        writer.writerow([val,])
-        writer.writerow(res)
-    proba_vals = ['Stm:', 'Stm confidence:', 'Stm Remember/Know:', 'Ltm:', 'Ltm confidence:', 'Ltm Remember/Know:']
-    probability = model.predict_proba(x_test)
-    writer.writerow(['Predict probability', ])
-    for val, prob in zip(proba_vals, probability):
-        writer.writerow([val, ])
-        writer.writerow(prob)
-    file.close()
-    return
-
-
-def confusion_matrix_file(y_true, y_pred):
-    print('true size = ',np.shape(y_pred))
-    print(' pred size = ',np.shape(y_true))
-    separate_true = separate_results(y_true)
-    separate_pred = separate_results(y_pred)
-    filename = 'ConfusionMatrix.csv'
-    matrix_stm = confusion_matrix(separate_true[0], separate_pred[0])
-    normalize_matrix_stm = matrix_stm / matrix_stm.astype(np.float).sum(axis=1, keepdims=True)
-    matrix_ltm = confusion_matrix(separate_true[3], separate_pred[3])
-    normalize_matrix_ltm = matrix_ltm / matrix_ltm.astype(np.float).sum(axis=1, keepdims=True)
-    file = open(filename, "w", newline='')
-    writer = csv.writer(file, delimiter=',')
-    writer.writerow(['Confusion matrix - Stm (total =%d):' % len(y_true), ])
-    writer.writerow(matrix_stm)
-    writer.writerow(['Normalized confusion matrix - Stm:', ])
-    writer.writerow(normalize_matrix_stm)
-    writer.writerow(['Confusion matrix - Ltm (total =%d):' % len(y_true), ])
-    writer.writerow(matrix_ltm)
-    writer.writerow(['Normalized confusion matrix - Ltm:', ])
-    writer.writerow(normalize_matrix_ltm)
-    file.close()
-    return
-
-
-

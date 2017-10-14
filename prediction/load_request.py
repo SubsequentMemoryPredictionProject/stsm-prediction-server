@@ -22,7 +22,7 @@ def prediction_request_signals(request, conn):
     try:
         prediction_details = create_user_query(request)
     except:
-        raise UserRequestError('Error in user request - failed to create SQL query', 1004, sys.exc_info()[1])
+        raise UserRequestError('Error in user request - failed to create SQL query', 6000, str(sys.exc_info()))
     try:
         request_signals = choose_signals(conn, 1, 256, prediction_details, 'user_data')
         logger.info('Successful in getting eeg signals for user request')

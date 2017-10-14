@@ -36,7 +36,7 @@ class StsmPredictionModel:
                 print(est.classes_)
             return
         except:
-            raise ModelError('Failed loading saved model', 1000, str(sys.exc_info()[1]))
+            raise ModelError('Failed loading saved model', 4000, str(sys.exc_info()))
 
     def connect(self):
         try:
@@ -44,7 +44,7 @@ class StsmPredictionModel:
                                            , port=cfg.mysql['port'], user=cfg.mysql['user'], db=cfg.mysql['database'])
             self.logger.info('Connected to DB')
         except:
-            raise DBError('DB connection failed', 1001, str(sys.exc_info()[1]))
+            raise DBError('DB connection failed', 5000, str(sys.exc_info()))
 
     def disconnect(self):
         if self.db_conn:
@@ -52,7 +52,7 @@ class StsmPredictionModel:
                 self.db_conn.close()
                 self.logger.info('Disconnected from DB')
             except:
-                raise DBError('DB disconnection failed ', 1002, str(sys.exc_info()[1]))
+                raise DBError('DB disconnection failed ', 5001, str(sys.exc_info()))
 
     def predict(self, request):
         self.logger.info("In Stsm Model evaluate:")
@@ -66,7 +66,7 @@ class StsmPredictionModel:
             prediction = self.model.predict(request_signals)
             self.logger.info('Finished prediction')
         except:
-            raise ModelError('Error in model.predict', 1005, sys.exc_info()[1])
+            raise ModelError('Error in model predict', 4001, str(sys.exc_info()))
         try:
             predictions_db(prediction,request,self.db_conn)
             self.logger.info('Predictions successfully uploaded to DB')

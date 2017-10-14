@@ -8,7 +8,7 @@ from stsm_prediction_model.error_handling import DBError
 from stsm_prediction_model.error_handling import UserRequestError
 from prediction.load_request import prediction_request_signals
 from model_evaluation.cross_validation import d_prime
-from model_evaluation.cross_validation import confusion_matrix_file
+from model_evaluation.results_files import confusion_matrix_file
 
 from logger import Logger
 import numpy as np
@@ -20,7 +20,7 @@ def validate_user_results(request, db, model):
     try:
         query = create_user_query(request)
     except:
-        raise UserRequestError('Error in user request - failed to create SQL query', 1004, sys.exc_info()[1])
+        raise UserRequestError('Error in user request - failed to create SQL query', 6000, str(sys.exc_info()))
     try:
         request_signals = prediction_request_signals(request, db)
         true_values = get_results(db, query, 'user_data')
@@ -28,7 +28,7 @@ def validate_user_results(request, db, model):
         pred_values = get_results(db, query, 'untagged_predictions')
         logger.info('Finished getting predictions. size - %s' % str(np.shape(pred_values)))
         if not (np.size(true_values) and np.size(pred_values)):
-            raise DBError('Results/predictions doesnt exist', 1016, sys.exc_info()[1])
+            raise DBError('Results/predictions doesnt exist', 5003, str(sys.exc_info()))
     except DBError as err:
         raise DBError('Failed getting user results/predictions for validation - %s' % err.msg, err.code, err.error)
     try:
@@ -58,5 +58,5 @@ def model_evaluation_file(precision_remember, recall_remember, f1_remember, prec
             writer.writerow(score)
         file.close()
     except:
-        raise ModelError('Failed creating validation file', 1009, sys.exc_info()[1])
+        raise ModelError('Failed creating validation file', 4004, str(sys.exc_info()))
     return filename

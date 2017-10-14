@@ -7,10 +7,11 @@ class Singleton(type):
             self._instances[self] = super(Singleton, self).__call__(*args, **kwargs)
         return self._instances[self]
 
+
 class Logger(metaclass=Singleton):
     def __init__(self,
                  name='stsm-prediction-server-logger',
-                 level=logging.DEBUG,
+                 level=logging.INFO,
                  log_to_console=True,
                  handler=logging.FileHandler('stsm-prediction-server.log'),
     ):

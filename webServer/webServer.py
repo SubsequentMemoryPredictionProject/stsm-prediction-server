@@ -8,6 +8,7 @@ from stsm_prediction_model.error_handling import DBError
 from stsm_prediction_model.error_handling import UserRequestError
 from flask import Flask, request, send_from_directory
 import json
+import config as cfg
 from logger import Logger
 from stsm_prediction_model.stsm_model import StsmPredictionModel
 
@@ -61,7 +62,7 @@ if __name__ == '__main__':
         except DBError as e:
             logger.error(e.msg)
             raise
-        app.run(host='0.0.0.0', port=3100)
+        app.run(host=cfg.app['host'], port=cfg.app['port'])
 
     except :
         logger.error('Closing prediction server')
