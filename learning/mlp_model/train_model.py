@@ -25,7 +25,7 @@ def train_and_save(db, electrode, duration, layer=cfg.mlp_params['layers'], acti
                    cross_val=5, learning_rate=cfg.mlp_params['learning_rate']):
     try:
         mlp_model = MLPClassifier(verbose=True, hidden_layer_sizes=layer, activation=activation,
-                                  solver='sgd', learning_rate=learning_rate, max_iter=100)
+                                  solver='sgd', learning_rate=learning_rate, max_iter=500)
         multi_mlp_model = MultiOutputClassifier(mlp_model, n_jobs=1)
     except:
         raise ModelError('Error in creating MLP model', 4001, str(sys.exc_info()))
@@ -42,7 +42,7 @@ def train_and_save(db, electrode, duration, layer=cfg.mlp_params['layers'], acti
     trained_model = cross_validation(X, Y, multi_mlp_model, cross_val)
     # save trained model
     try:
-        joblib.dump(trained_model, 'test_model.pkl')
+        joblib.dump(trained_model, 'trained_model.pkl')
     except:
         raise ModelError('Error saving trained model', 4006, str(sys.exc_info()))
     return

@@ -12,6 +12,7 @@ from DB.db_access import choose_signals
 from stsm_prediction_model.error_handling import DBError
 from stsm_prediction_model.error_handling import UserRequestError
 from logger import Logger
+import config as cfg
 
 logger = Logger().get_logger()
 
@@ -24,10 +25,11 @@ def prediction_request_signals(request, conn):
     except:
         raise UserRequestError('Error in user request - failed to create SQL query', 6000, str(sys.exc_info()))
     try:
-        request_signals = choose_signals(conn, 1, 256, prediction_details, 'user_data')
+        request_signals = choose_signals(conn, cfg.model_features['elec'], cfg.model_features['duration'],
+                                         prediction_details, 'user_data')
         logger.info('Successful in getting eeg signals for user request')
     except DBError as err:
-        raise DBError('Failed getting eeg signals for user request - %s' % err.msg, err.code, sys.exc_info()[1])
+        raise DBError('Failed getting eeg signals for user request - %s' % err.msg, err.code, str(sys.exc_info()))
     return request_signals
 
 
