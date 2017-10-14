@@ -42,7 +42,6 @@ try:
 
     for elec in electrode:
         for dur in eeg_duration:
-            X = choose_signals(conn, elec, dur)
             for c in C:
                 for kernel in kernels:
                     train_and_save(conn, elec, dur, kernel, c)

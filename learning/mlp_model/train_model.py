@@ -42,7 +42,7 @@ def train_and_save(db, electrode, duration, layer=cfg.mlp_params['layers'], acti
     trained_model = cross_validation(X, Y, multi_mlp_model, cross_val)
     # save trained model
     try:
-        joblib.dump(trained_model, 'trained_model.pkl')
+        joblib.dump(trained_model, 'test_model.pkl')
     except:
         raise ModelError('Error saving trained model', 4006, str(sys.exc_info()))
     return
