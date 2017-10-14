@@ -36,7 +36,7 @@ def train_and_save(db, electrode, duration, layer=cfg.mlp_params['layers'], acti
         Y = get_results(db)
         logger.info('Finished getting results for model training. size -%s' % str(np.shape(Y)))
     except DBError as err:
-        raise DBError('Failed getting signals/results - %s' % err.msg, 1015, sys.exc_info()[1])
+        raise DBError('Failed getting signals/results - %s' % err.msg, 5002, str(sys.exc_info()))
     logger.info('Results using params: electrode =%d, duration = %d, layers = %s, activation = %s, learning_rate = %s' %
                 (electrode, duration, str(layer), activation, learning_rate))
     trained_model = cross_validation(X, Y, multi_mlp_model, cross_val)
